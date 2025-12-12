@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+  // ======================
+  // VIDA Y MANÁ
+  // ======================
   let life = 30;
   let maxMana = 1;
   let currentMana = 1;
@@ -41,7 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
   window.nextTurn = () => {
     if (maxMana < 8) maxMana++;
     currentMana = maxMana;
+
+    // limpiar temporales
     creatures.forEach(c => c.atkTemp = 0);
+
     logEvent("Nuevo turno (temporales limpiados)");
     updateUI();
     renderBoard();
@@ -49,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ======================
-  // CARTAS
+  // CARTAS DE CRIATURA
   // ======================
   const creatureCards = [
     { name: "— Vacío —", element: "Ninguno", atk: 0, def: 0, stars: 0 },
@@ -59,14 +65,35 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "Guardián de Luz", element: "Luz", atk: 6, def: 10, stars: 2 }
   ];
 
+  // ======================
+  // CARTAS DE TERRENO
+  // ======================
   const terrainCards = [
-    { name: "— Sin Terreno —", effect: "Ninguno" },
-    { name: "Cementerio Antiguo", effect: "Las criaturas Sombra ganan +1 ATK." },
-    { name: "Santuario de Luz", effect: "Las criaturas de Luz ganan +1 DEF." }
+    {
+      name: "— Sin Terreno —",
+      apply: () => ({ atk: 0, def: 0 })
+    },
+    {
+      name: "Cementerio Antiguo",
+      apply: creature =>
+        creature.card.element === "Sombra"
+          ? { atk: 1, def: 0 }
+          : { atk: 0, def: 0 }
+    },
+    {
+      name: "Santuario de Luz",
+      apply: creature =>
+        creature.card.element === "Luz"
+          ? { atk: 0, def: 1 }
+          : { atk: 0, def: 0 }
+    }
   ];
 
   const elements = ["Todos", "Sombra", "Luz"];
 
+  // ======================
+  // MESA
+  // ======================
   const creatures = Array.from({ length: 5 }, (_, i) => ({
     slot: i + 1,
     elementFilter: "Todos",
@@ -78,8 +105,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let terrain = terrainCards[0];
 
-  const atk = c => c.card.atk + c.atkTemp + c.atkPerm;
-  const def = c => Math.max(c.card.def - c.damage, 0);
+  // ======================
+  // CÁLCULOS (CLAVE)
+  // ======================
+  function terrainBonus(creature) {
+    return terrain.apply ? terrain.apply(creature) : { atk: 0, def: 0 };
+  }
+
+  function atk(c) {
+    const bonus = terrainBonus(c);
+    return c.card.atk + c.atkTemp + c.atkPerm + bonus.atk;
+  }
+
+  function def(c) {
+    const bonus = terrainBonus(c);
+    return Math.max(c.card.def + bonus.def - c.damage, 0);
+  }
 
   // ======================
   // ACCIONES
@@ -120,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.selectTerrain = index => {
     terrain = terrainCards[index];
     logEvent(`Terreno activo: ${terrain.name}`);
+    renderBoard();
     renderTerrain();
   };
 
@@ -205,8 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </option>`
           ).join("")}
         </select>
-        <div><strong>Efecto:</strong></div>
-        <div>${terrain.effect}</div>
+        <div><strong>Terreno activo</strong></div>
       </div>
     `;
   }

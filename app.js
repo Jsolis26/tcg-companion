@@ -2,6 +2,12 @@ import { creatures as CREATURES, terrains as TERRAINS } from "./cards.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
+  // ======================
+  // ESTADO DEL JUGADOR
+  // ======================
+  let life = 40;
+  let mana = 3;
+
   const board = Array.from({ length: 5 }, (_, i) => ({
     slot: i + 1,
     card: null,
@@ -11,6 +17,17 @@ document.addEventListener("DOMContentLoaded", () => {
   let activeTerrain = null;
   const elements = ["Todos", ...new Set(CREATURES.map(c => c.element))];
 
+  // ======================
+  // UI
+  // ======================
+  function updateUI() {
+    document.getElementById("life").innerText = life;
+    document.getElementById("currentMana").innerText = mana;
+  }
+
+  // ======================
+  // TERRENO
+  // ======================
   function terrainBonus(card) {
     if (!activeTerrain || !card) return { atk:0, def:0 };
     if (activeTerrain.affects.element === card.element) return activeTerrain.bonus;
@@ -18,6 +35,42 @@ document.addEventListener("DOMContentLoaded", () => {
     return { atk:0, def:0 };
   }
 
+  // ======================
+  // ACCIONES JUGADOR
+  // ======================
+  window.changeLife = amount => {
+    life += amount;
+    updateUI();
+  };
+
+  window.useMana = amount => {
+    if (mana >= amount) mana -= amount;
+    updateUI();
+  };
+
+  window.addMana = amount => {
+    mana += amount;
+    updateUI();
+  };
+
+  window.resetGame = () => {
+    life = 40;
+    mana = 3;
+    activeTerrain = null;
+
+    board.forEach(slot => {
+      slot.card = null;
+      slot.filter = "Todos";
+    });
+
+    renderBoard();
+    renderTerrain();
+    updateUI();
+  };
+
+  // ======================
+  // SELECCIONES
+  // ======================
   window.setFilter = (i, v) => {
     board[i].filter = v;
     board[i].card = null;
@@ -35,6 +88,9 @@ document.addEventListener("DOMContentLoaded", () => {
     renderTerrain();
   };
 
+  // ======================
+  // RENDER
+  // ======================
   function renderBoard() {
     const el = document.getElementById("board");
     el.innerHTML = "";
@@ -104,4 +160,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   renderBoard();
   renderTerrain();
+  updateUI();
 });

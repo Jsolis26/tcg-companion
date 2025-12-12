@@ -1,154 +1,145 @@
-// ======================
-// VIDA
-// ======================
-let life = 30;
+document.addEventListener("DOMContentLoaded", () => {
 
-// ======================
-// MANÁ
-// ======================
-let maxMana = 1;
-let currentMana = 1;
+  // ======================
+  // VIDA Y MANÁ
+  // ======================
+  let life = 30;
+  let maxMana = 1;
+  let currentMana = 1;
 
-// ======================
-// LOG
-// ======================
-const log = document.getElementById("log");
+  const log = document.getElementById("log");
 
-function logEvent(text) {
-  const li = document.createElement("li");
-  li.innerText = text;
-  log.prepend(li);
-}
-
-// ======================
-// UI GENERAL
-// ======================
-function updateUI() {
-  document.getElementById("life").innerText = life;
-  document.getElementById("maxMana").innerText = maxMana;
-  document.getElementById("currentMana").innerText = currentMana;
-}
-
-// ======================
-// VIDA
-// ======================
-function changeLife(amount) {
-  life += amount;
-  logEvent(`Vida ${amount > 0 ? "+" : ""}${amount}`);
-  updateUI();
-
-  if (life <= 0) {
-    alert("Jugador derrotado");
-  }
-}
-
-// ======================
-// MANÁ
-// ======================
-function nextTurn() {
-  if (maxMana < 8) maxMana++;
-  currentMana = maxMana;
-
-  // limpiar temporales
-  creatures.forEach(c => c.atkTemp = 0);
-
-  logEvent("Nuevo turno (temporales limpiados)");
-  updateUI();
-  updateBoard();
-}
-
-function useMana(amount) {
-  if (currentMana >= amount) {
-    currentMana -= amount;
-    logEvent(`Usa ${amount} maná`);
-  } else {
-    alert("Maná insuficiente");
-  }
-  updateUI();
-}
-
-function addTempMana(amount) {
-  currentMana += amount;
-  logEvent(`Maná temporal +${amount}`);
-  updateUI();
-}
-
-// ======================
-// CRIATURAS (5 ESPACIOS)
-// ======================
-const creatures = Array.from({ length: 5 }, (_, i) => ({
-  slot: i + 1,
-  name: `Criatura ${i + 1}`,
-  atkBase: 5,
-  atkTemp: 0,
-  atkPerm: 0,
-  defBase: 4,
-  damage: 0
-}));
-
-function getAtk(c) {
-  return c.atkBase + c.atkTemp + c.atkPerm;
-}
-
-function getDef(c) {
-  return Math.max(c.defBase - c.damage, 0);
-}
-
-// ======================
-// ACCIONES DE CRIATURA
-// ======================
-function addAtkTemp(index) {
-  creatures[index].atkTemp += 1;
-  logEvent(`Slot ${index + 1}: +1 ATK temporal`);
-  updateBoard();
-}
-
-function addAtkPerm(index) {
-  creatures[index].atkPerm += 1;
-  logEvent(`Slot ${index + 1}: +1 ATK permanente`);
-  updateBoard();
-}
-
-function takeDamage(index) {
-  const c = creatures[index];
-  c.damage += 1;
-
-  if (getDef(c) <= 0) {
-    logEvent(`Slot ${index + 1}: criatura destruida`);
-    c.damage = c.defBase;
-  } else {
-    logEvent(`Slot ${index + 1}: recibe 1 daño`);
+  function logEvent(text) {
+    const li = document.createElement("li");
+    li.innerText = text;
+    log.prepend(li);
   }
 
-  updateBoard();
-}
+  function updateUI() {
+    document.getElementById("life").innerText = life;
+    document.getElementById("maxMana").innerText = maxMana;
+    document.getElementById("currentMana").innerText = currentMana;
+  }
 
-// ======================
-// DIBUJAR MESA
-// ======================
-function updateBoard() {
-  const board = document.getElementById("board");
-  board.innerHTML = "";
+  window.changeLife = function(amount) {
+    life += amount;
+    logEvent(`Vida ${amount > 0 ? "+" : ""}${amount}`);
+    updateUI();
+  };
 
-  creatures.forEach((c, i) => {
-    const div = document.createElement("div");
-    div.className = "creature";
+  window.useMana = function(amount) {
+    if (currentMana >= amount) {
+      currentMana -= amount;
+      logEvent(`Usa ${amount} maná`);
+      updateUI();
+    }
+  };
 
-    div.innerHTML = `
-      <h3>${c.name}</h3>
-      <div>ATK: ${getAtk(c)}</div>
-      <div>DEF: ${getDef(c)} / ${c.defBase}</div>
-      <button onclick="addAtkTemp(${i})">+1 ATK temp</button>
-      <button onclick="addAtkPerm(${i})">+1 ATK perm</button>
-      <button onclick="takeDamage(${i})">Daño</button>
-    `;
+  window.addTempMana = function(amount) {
+    currentMana += amount;
+    logEvent(`Maná temporal +${amount}`);
+    updateUI();
+  };
 
-    board.appendChild(div);
-  });
-}
+  window.nextTurn = function() {
+    if (maxMana < 8) maxMana++;
+    currentMana = maxMana;
+    creatures.forEach(c => c.atkTemp = 0);
+    logEvent("Nuevo turno (temporales limpiados)");
+    updateUI();
+    renderBoard();
+  };
 
-// ======================
-// INICIO
-// ======================
-updateUI();
-updateBoard();
+  // ======================
+  // CARTAS DISPONIBLES
+  // ======================
+  const cards = [
+    { name: "— Vacío —", atk: 0, def: 0 },
+    { name: "Espectro Menor", atk: 5, def: 4 },
+    { name: "Aprendiz Necromancer", atk: 7, def: 8 },
+    { name: "Caballero No-Muerto", atk: 11, def: 11 }
+  ];
+
+  // ======================
+  // CRIATURAS EN MESA
+  // ======================
+  const creatures = Array.from({ length: 5 }, () => ({
+    card: cards[0],
+    atkTemp: 0,
+    atkPerm: 0,
+    damage: 0
+  }));
+
+  function atk(c) {
+    return c.card.atk + c.atkTemp + c.atkPerm;
+  }
+
+  function def(c) {
+    return Math.max(c.card.def - c.damage, 0);
+  }
+
+  // ======================
+  // ACCIONES
+  // ======================
+  window.selectCard = function(slot, index) {
+    creatures[slot] = {
+      card: cards[index],
+      atkTemp: 0,
+      atkPerm: 0,
+      damage: 0
+    };
+    logEvent(`Slot ${slot + 1}: ${cards[index].name}`);
+    renderBoard();
+  };
+
+  window.addAtkTemp = function(slot) {
+    creatures[slot].atkTemp++;
+    logEvent(`Slot ${slot + 1}: +1 ATK temp`);
+    renderBoard();
+  };
+
+  window.addAtkPerm = function(slot) {
+    creatures[slot].atkPerm++;
+    logEvent(`Slot ${slot + 1}: +1 ATK perm`);
+    renderBoard();
+  };
+
+  window.takeDamage = function(slot) {
+    creatures[slot].damage++;
+    logEvent(`Slot ${slot + 1}: recibe daño`);
+    renderBoard();
+  };
+
+  // ======================
+  // RENDER
+  // ======================
+  function renderBoard() {
+    const board = document.getElementById("board");
+    board.innerHTML = "";
+
+    creatures.forEach((c, i) => {
+      const div = document.createElement("div");
+      div.className = "creature";
+
+      div.innerHTML = `
+        <select onchange="selectCard(${i}, this.value)">
+          ${cards.map((card, idx) =>
+            `<option value="${idx}" ${card.name === c.card.name ? "selected" : ""}>${card.name}</option>`
+          ).join("")}
+        </select>
+
+        <div>ATK: ${atk(c)}</div>
+        <div>DEF: ${def(c)} / ${c.card.def}</div>
+
+        <button onclick="addAtkTemp(${i})">+ATK temp</button>
+        <button onclick="addAtkPerm(${i})">+ATK perm</button>
+        <button onclick="takeDamage(${i})">Daño</button>
+      `;
+
+      board.appendChild(div);
+    });
+  }
+
+  updateUI();
+  renderBoard();
+});

@@ -21,13 +21,13 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("currentMana").innerText = currentMana;
   }
 
-  window.changeLife = function(amount) {
+  window.changeLife = amount => {
     life += amount;
     logEvent(`Vida ${amount > 0 ? "+" : ""}${amount}`);
     updateUI();
   };
 
-  window.useMana = function(amount) {
+  window.useMana = amount => {
     if (currentMana >= amount) {
       currentMana -= amount;
       logEvent(`Usa ${amount} maná`);
@@ -35,13 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  window.addTempMana = function(amount) {
+  window.addTempMana = amount => {
     currentMana += amount;
     logEvent(`Maná temporal +${amount}`);
     updateUI();
   };
 
-  window.nextTurn = function() {
+  window.nextTurn = () => {
     if (maxMana < 8) maxMana++;
     currentMana = maxMana;
     creatures.forEach(c => c.atkTemp = 0);
@@ -51,62 +51,84 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ======================
-  // CARTAS DISPONIBLES
+  // CARTAS
   // ======================
   const cards = [
-    { name: "— Vacío —", atk: 0, def: 0 },
-    { name: "Espectro Menor", atk: 5, def: 4 },
-    { name: "Aprendiz Necromancer", atk: 7, def: 8 },
-    { name: "Caballero No-Muerto", atk: 11, def: 11 }
+    { name: "— Vacío —", element: "Ninguno", atk: 0, def: 0 },
+    { name: "Espectro Menor", element: "Sombra", atk: 5, def: 4 },
+    { name: "Aprendiz Necromancer", element: "Sombra", atk: 7, def: 8 },
+    { name: "Caballero No-Muerto", element: "Sombra", atk: 11, def: 11 },
+    { name: "Guardían de Luz", element: "Luz", atk: 6, def: 10 }
   ];
 
+  const elements = ["Todos", "Sombra", "Luz"];
+
   // ======================
-  // CRIATURAS EN MESA
+  // MESA
   // ======================
   const creatures = Array.from({ length: 5 }, () => ({
+    elementFilter: "Todos",
     card: cards[0],
     atkTemp: 0,
     atkPerm: 0,
     damage: 0
   }));
 
-  function atk(c) {
-    return c.card.atk + c.atkTemp + c.atkPerm;
-  }
-
-  function def(c) {
-    return Math.max(c.card.def - c.damage, 0);
-  }
+  const atk = c => c.card.atk + c.atkTemp + c.atkPerm;
+  const def = c => Math.max(c.card.def - c.damage, 0);
 
   // ======================
   // ACCIONES
   // ======================
-  window.selectCard = function(slot, index) {
-    creatures[slot] = {
-      card: cards[index],
-      atkTemp: 0,
-      atkPerm: 0,
-      damage: 0
-    };
+  window.setFilter = (slot, value) => {
+    creatures[slot].elementFilter = value;
+    creatures[slot].card = cards[0];
+    renderBoard();
+  };
+
+  window.selectCard = (slot, index) => {
+    creatures[slot].card = cards[index];
+    creatures[slot].atkTemp = 0;
+    creatures[slot].atkPerm = 0;
+    creatures[slot].damage = 0;
     logEvent(`Slot ${slot + 1}: ${cards[index].name}`);
     renderBoard();
   };
 
-  window.addAtkTemp = function(slot) {
+  window.addAtkTemp = slot => {
     creatures[slot].atkTemp++;
-    logEvent(`Slot ${slot + 1}: +1 ATK temp`);
     renderBoard();
   };
 
-  window.addAtkPerm = function(slot) {
+  window.addAtkPerm = slot => {
     creatures[slot].atkPerm++;
-    logEvent(`Slot ${slot + 1}: +1 ATK perm`);
     renderBoard();
   };
 
-  window.takeDamage = function(slot) {
+  window.takeDamage = slot => {
     creatures[slot].damage++;
-    logEvent(`Slot ${slot + 1}: recibe daño`);
+    renderBoard();
+  };
+
+  // ======================
+  // RESET
+  // ======================
+  window.resetGame = () => {
+    life = 30;
+    maxMana = 1;
+    currentMana = 1;
+    log.innerHTML = "";
+
+    creatures.forEach(c => {
+      c.card = cards[0];
+      c.atkTemp = 0;
+      c.atkPerm = 0;
+      c.damage = 0;
+      c.elementFilter = "Todos";
+    });
+
+    logEvent("Nueva partida iniciada");
+    updateUI();
     renderBoard();
   };
 
@@ -118,13 +140,26 @@ document.addEventListener("DOMContentLoaded", () => {
     board.innerHTML = "";
 
     creatures.forEach((c, i) => {
+      const filtered = cards.filter(card =>
+        c.elementFilter === "Todos" || card.element === c.elementFilter
+      );
+
       const div = document.createElement("div");
       div.className = "creature";
 
       div.innerHTML = `
+        <select onchange="setFilter(${i}, this.value)">
+          ${elements.map(el =>
+            `<option ${el === c.elementFilter ? "selected" : ""}>${el}</option>`
+          ).join("")}
+        </select>
+
         <select onchange="selectCard(${i}, this.value)">
-          ${cards.map((card, idx) =>
-            `<option value="${idx}" ${card.name === c.card.name ? "selected" : ""}>${card.name}</option>`
+          ${filtered.map(card =>
+            `<option value="${cards.indexOf(card)}"
+              ${card.name === c.card.name ? "selected" : ""}>
+              ${card.name}
+            </option>`
           ).join("")}
         </select>
 

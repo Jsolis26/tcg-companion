@@ -66,13 +66,13 @@ button {
 
 .stat {
   font-size: 14px;
-  margin: 2px 0;
+  margin: 3px 0;
 }
 
 .bonus {
   color: #6ddf6d;
   font-size: 12px;
-  margin-left: 4px;
+  margin-left: 6px;
 }
 
 .creature, .terrain {

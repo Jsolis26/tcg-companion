@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>TCG Companion App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <h1>TCG Companion</h1>
+
+  <!-- VIDA -->
+  <section class="panel">
+    <h2>Vida del Jugador</h2>
+    <div class="value" id="life">30</div>
+    <button onclick="changeLife(-1)">-1</button>
+    <button onclick="changeLife(1)">+1</button>
+    <button onclick="changeLife(-5)">-5</button>
+    <button onclick="changeLife(5)">+5</button>
+  </section>
+
+  <!-- MANÁ -->
+  <section class="panel">
+    <h2>Maná</h2>
+    <div class="value">
+      <span id="currentMana">1</span> /
+      <span id="maxMana">1</span>
+    </div>
+    <button onclick="useMana(1)">Usar 1</button>
+    <button onclick="addTempMana(1)">+1 temporal</button>
+    <button onclick="nextTurn()">Siguiente turno</button>
+  </section>
+
+  <!-- LOG -->
+  <section class="panel">
+    <h2>Registro</h2>
+    <ul id="log"></ul>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -48,31 +48,43 @@ document.addEventListener("DOMContentLoaded", () => {
     logEvent("Nuevo turno (temporales limpiados)");
     updateUI();
     renderBoard();
+    renderTerrain();
   };
 
   // ======================
   // CARTAS
   // ======================
-  const cards = [
-    { name: "— Vacío —", element: "Ninguno", atk: 0, def: 0 },
-    { name: "Espectro Menor", element: "Sombra", atk: 5, def: 4 },
-    { name: "Aprendiz Necromancer", element: "Sombra", atk: 7, def: 8 },
-    { name: "Caballero No-Muerto", element: "Sombra", atk: 11, def: 11 },
-    { name: "Guardían de Luz", element: "Luz", atk: 6, def: 10 }
+  const creatureCards = [
+    { name: "— Vacío —", element: "Ninguno", atk: 0, def: 0, stars: 0 },
+    { name: "Espectro Menor", element: "Sombra", atk: 5, def: 4, stars: 1 },
+    { name: "Aprendiz Necromancer", element: "Sombra", atk: 7, def: 8, stars: 2 },
+    { name: "Caballero No-Muerto", element: "Sombra", atk: 11, def: 11, stars: 3 },
+    { name: "Guardián de Luz", element: "Luz", atk: 6, def: 10, stars: 2 }
+  ];
+
+  const terrainCards = [
+    { name: "— Sin Terreno —", effect: "Ninguno" },
+    { name: "Cementerio Antiguo", effect: "Las criaturas Sombra ganan +1 ATK." },
+    { name: "Santuario de Luz", effect: "Las criaturas de Luz ganan +1 DEF." }
   ];
 
   const elements = ["Todos", "Sombra", "Luz"];
 
   // ======================
-  // MESA
+  // MESA DE CRIATURAS
   // ======================
   const creatures = Array.from({ length: 5 }, () => ({
     elementFilter: "Todos",
-    card: cards[0],
+    card: creatureCards[0],
     atkTemp: 0,
     atkPerm: 0,
     damage: 0
   }));
+
+  // ======================
+  // TERRENO
+  // ======================
+  let terrain = terrainCards[0];
 
   const atk = c => c.card.atk + c.atkTemp + c.atkPerm;
   const def = c => Math.max(c.card.def - c.damage, 0);
@@ -82,16 +94,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // ======================
   window.setFilter = (slot, value) => {
     creatures[slot].elementFilter = value;
-    creatures[slot].card = cards[0];
+    creatures[slot].card = creatureCards[0];
     renderBoard();
   };
 
   window.selectCard = (slot, index) => {
-    creatures[slot].card = cards[index];
-    creatures[slot].atkTemp = 0;
-    creatures[slot].atkPerm = 0;
-    creatures[slot].damage = 0;
-    logEvent(`Slot ${slot + 1}: ${cards[index].name}`);
+    creatures[slot] = {
+      ...creatures[slot],
+      card: creatureCards[index],
+      atkTemp: 0,
+      atkPerm: 0,
+      damage: 0
+    };
+    logEvent(`Slot ${slot + 1}: ${creatureCards[index].name}`);
     renderBoard();
   };
 
@@ -110,9 +125,12 @@ document.addEventListener("DOMContentLoaded", () => {
     renderBoard();
   };
 
-  // ======================
-  // RESET
-  // ======================
+  window.selectTerrain = index => {
+    terrain = terrainCards[index];
+    logEvent(`Terreno activado: ${terrain.name}`);
+    renderTerrain();
+  };
+
   window.resetGame = () => {
     life = 30;
     maxMana = 1;
@@ -120,16 +138,19 @@ document.addEventListener("DOMContentLoaded", () => {
     log.innerHTML = "";
 
     creatures.forEach(c => {
-      c.card = cards[0];
+      c.card = creatureCards[0];
       c.atkTemp = 0;
       c.atkPerm = 0;
       c.damage = 0;
       c.elementFilter = "Todos";
     });
 
+    terrain = terrainCards[0];
+
     logEvent("Nueva partida iniciada");
     updateUI();
     renderBoard();
+    renderTerrain();
   };
 
   // ======================
@@ -140,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
     board.innerHTML = "";
 
     creatures.forEach((c, i) => {
-      const filtered = cards.filter(card =>
+      const filtered = creatureCards.filter(card =>
         c.elementFilter === "Todos" || card.element === c.elementFilter
       );
 
@@ -156,13 +177,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <select onchange="selectCard(${i}, this.value)">
           ${filtered.map(card =>
-            `<option value="${cards.indexOf(card)}"
+            `<option value="${creatureCards.indexOf(card)}"
               ${card.name === c.card.name ? "selected" : ""}>
               ${card.name}
             </option>`
           ).join("")}
         </select>
 
+        <div>⭐ ${c.card.stars}</div>
         <div>ATK: ${atk(c)}</div>
         <div>DEF: ${def(c)} / ${c.card.def}</div>
 
@@ -175,6 +197,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function renderTerrain() {
+    const slot = document.getElementById("terrainSlot");
+
+    slot.innerHTML = `
+      <div class="terrain">
+        <select onchange="selectTerrain(this.value)">
+          ${terrainCards.map((t, i) =>
+            `<option value="${i}" ${t.name === terrain.name ? "selected" : ""}>
+              ${t.name}
+            </option>`
+          ).join("")}
+        </select>
+        <div><strong>Efecto:</strong></div>
+        <div>${terrain.effect}</div>
+      </div>
+    `;
+  }
+
   updateUI();
   renderBoard();
+  renderTerrain();
 });

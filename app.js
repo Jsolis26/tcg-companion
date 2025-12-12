@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.selectCard = (i, id) => {
-    board[i].card = CREATURES.find(c => c.id === id);
+    board[i].card = CREATURES.find(c => c.id === id) || null;
     renderBoard();
   };
 
@@ -51,12 +51,16 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="slot-title">Criatura ${slot.slot}</div>
 
           <select onchange="setFilter(${i}, this.value)">
-            ${elements.map(e => `<option>${e}</option>`).join("")}
+            ${elements.map(e =>
+              `<option value="${e}" ${slot.filter===e?"selected":""}>${e}</option>`
+            ).join("")}
           </select>
 
           <select onchange="selectCard(${i}, this.value)">
             <option value="">— Selecciona —</option>
-            ${list.map(c => `<option value="${c.id}">${c.name}</option>`).join("")}
+            ${list.map(c =>
+              `<option value="${c.id}" ${slot.card?.id===c.id?"selected":""}>${c.name}</option>`
+            ).join("")}
           </select>
 
           ${slot.card ? `
@@ -84,12 +88,14 @@ document.addEventListener("DOMContentLoaded", () => {
     el.innerHTML = `
       <select onchange="selectTerrain(this.value)">
         <option value="">— Sin Terreno —</option>
-        ${TERRAINS.map(t => `<option value="${t.id}">${t.name}</option>`).join("")}
+        ${TERRAINS.map(t =>
+          `<option value="${t.id}" ${activeTerrain?.id===t.id?"selected":""}>${t.name}</option>`
+        ).join("")}
       </select>
 
       ${activeTerrain ? `
         <div class="effect-text">
-          <strong>Efecto:</strong><br>
+          <div class="terrain-name">${activeTerrain.name}</div>
           ${activeTerrain.textEffect}
         </div>
       ` : ""}

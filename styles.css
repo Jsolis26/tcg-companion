@@ -34,11 +34,11 @@ button {
   border: 1px solid #333;
   padding: 10px;
   border-radius: 6px;
-  text-align: center;
   background: #181818;
+  text-align: center;
 }
 
-.creature h3 {
-  margin: 5px 0;
-  font-size: 14px;
+select {
+  margin-bottom: 6px;
+  width: 100%;
 }

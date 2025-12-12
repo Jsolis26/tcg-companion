@@ -1,8 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ======================
-  // VIDA Y MANÁ
-  // ======================
   let life = 30;
   let maxMana = 1;
   let currentMana = 1;
@@ -70,10 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const elements = ["Todos", "Sombra", "Luz"];
 
-  // ======================
-  // MESA DE CRIATURAS
-  // ======================
-  const creatures = Array.from({ length: 5 }, () => ({
+  const creatures = Array.from({ length: 5 }, (_, i) => ({
+    slot: i + 1,
     elementFilter: "Todos",
     card: creatureCards[0],
     atkTemp: 0,
@@ -81,9 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
     damage: 0
   }));
 
-  // ======================
-  // TERRENO
-  // ======================
   let terrain = terrainCards[0];
 
   const atk = c => c.card.atk + c.atkTemp + c.atkPerm;
@@ -106,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
       atkPerm: 0,
       damage: 0
     };
-    logEvent(`Slot ${slot + 1}: ${creatureCards[index].name}`);
+    logEvent(`Criatura ${slot + 1}: ${creatureCards[index].name}`);
     renderBoard();
   };
 
@@ -127,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.selectTerrain = index => {
     terrain = terrainCards[index];
-    logEvent(`Terreno activado: ${terrain.name}`);
+    logEvent(`Terreno activo: ${terrain.name}`);
     renderTerrain();
   };
 
@@ -166,31 +158,35 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       const div = document.createElement("div");
-      div.className = "creature";
+      div.className = "slot";
 
       div.innerHTML = `
-        <select onchange="setFilter(${i}, this.value)">
-          ${elements.map(el =>
-            `<option ${el === c.elementFilter ? "selected" : ""}>${el}</option>`
-          ).join("")}
-        </select>
+        <div class="slot-title">Criatura ${c.slot}</div>
 
-        <select onchange="selectCard(${i}, this.value)">
-          ${filtered.map(card =>
-            `<option value="${creatureCards.indexOf(card)}"
-              ${card.name === c.card.name ? "selected" : ""}>
-              ${card.name}
-            </option>`
-          ).join("")}
-        </select>
+        <div class="creature">
+          <select onchange="setFilter(${i}, this.value)">
+            ${elements.map(el =>
+              `<option ${el === c.elementFilter ? "selected" : ""}>${el}</option>`
+            ).join("")}
+          </select>
 
-        <div>⭐ ${c.card.stars}</div>
-        <div>ATK: ${atk(c)}</div>
-        <div>DEF: ${def(c)} / ${c.card.def}</div>
+          <select onchange="selectCard(${i}, this.value)">
+            ${filtered.map(card =>
+              `<option value="${creatureCards.indexOf(card)}"
+                ${card.name === c.card.name ? "selected" : ""}>
+                ${card.name}
+              </option>`
+            ).join("")}
+          </select>
 
-        <button onclick="addAtkTemp(${i})">+ATK temp</button>
-        <button onclick="addAtkPerm(${i})">+ATK perm</button>
-        <button onclick="takeDamage(${i})">Daño</button>
+          <div>⭐ ${c.card.stars}</div>
+          <div>ATK: ${atk(c)}</div>
+          <div>DEF: ${def(c)} / ${c.card.def}</div>
+
+          <button onclick="addAtkTemp(${i})">+ATK temp</button>
+          <button onclick="addAtkPerm(${i})">+ATK perm</button>
+          <button onclick="takeDamage(${i})">Daño</button>
+        </div>
       `;
 
       board.appendChild(div);

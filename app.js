@@ -5,28 +5,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const board = Array.from({ length: 5 }, (_, i) => ({
     slot: i + 1,
     card: null,
-    atkTemp: 0,
-    atkPerm: 0,
-    damage: 0,
     filter: "Todos"
   }));
 
   let activeTerrain = null;
-
   const elements = ["Todos", ...new Set(CREATURES.map(c => c.element))];
 
   function terrainBonus(card) {
-    if (!activeTerrain || !card) return { atk: 0, def: 0 };
+    if (!activeTerrain || !card) return { atk:0, def:0 };
     if (activeTerrain.affects.element === card.element) return activeTerrain.bonus;
     if (activeTerrain.affects.class === card.class) return activeTerrain.bonus;
-    return { atk: 0, def: 0 };
+    return { atk:0, def:0 };
   }
-
-  function baseAtk(slot) { return slot.card ? slot.card.atk : 0; }
-  function baseDef(slot) { return slot.card ? slot.card.def : 0; }
-
-  function finalAtk(slot) { return baseAtk(slot) + terrainBonus(slot.card).atk; }
-  function finalDef(slot) { return baseDef(slot) + terrainBonus(slot.card).def; }
 
   window.setFilter = (i, v) => {
     board[i].filter = v;
@@ -54,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         slot.filter === "Todos" || c.element === slot.filter
       );
 
-      const bonus = slot.card ? terrainBonus(slot.card) : { atk: 0, def: 0 };
+      const bonus = slot.card ? terrainBonus(slot.card) : { atk:0, def:0 };
 
       el.innerHTML += `
         <div class="slot">
@@ -71,14 +61,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
           ${slot.card ? `
             <div class="stat"><strong>${slot.card.name}</strong></div>
+
             <div class="stat">
-              ATK: ${baseAtk(slot)}
-              ${bonus.atk ? `<span class="bonus">+${bonus.atk} → (${finalAtk(slot)})</span>` : ""}
+              ATK: ${slot.card.atk}
+              ${bonus.atk ? `<span class="bonus">+${bonus.atk} → (${slot.card.atk + bonus.atk})</span>` : ""}
             </div>
+
             <div class="stat">
-              DEF: ${baseDef(slot)}
-              ${bonus.def ? `<span class="bonus">+${bonus.def} → (${finalDef(slot)})</span>` : ""}
+              DEF: ${slot.card.def}
+              ${bonus.def ? `<span class="bonus">+${bonus.def} → (${slot.card.def + bonus.def})</span>` : ""}
             </div>
+
             <div class="stat">⭐ ${slot.card.stars}</div>
           ` : ""}
         </div>
@@ -93,6 +86,13 @@ document.addEventListener("DOMContentLoaded", () => {
         <option value="">— Sin Terreno —</option>
         ${TERRAINS.map(t => `<option value="${t.id}">${t.name}</option>`).join("")}
       </select>
+
+      ${activeTerrain ? `
+        <div class="effect-text">
+          <strong>Efecto:</strong><br>
+          ${activeTerrain.textEffect}
+        </div>
+      ` : ""}
     `;
   }
 

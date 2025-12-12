@@ -8,7 +8,27 @@
 </head>
 <body>
 
-<h1>TCG Companion</h1>
+<h1>Crónicas TCG</h1>
+
+<section class="panel">
+  <h2>Jugador</h2>
+
+  <div class="stat">
+    ❤️ Vida: <strong id="life">40</strong>
+  </div>
+  <button onclick="changeLife(-1)">-1</button>
+  <button onclick="changeLife(1)">+1</button>
+
+  <div class="stat" style="margin-top:8px">
+    🔮 Maná: <strong><span id="currentMana">3</span></strong>
+  </div>
+  <button onclick="useMana(1)">Usar 1</button>
+  <button onclick="addMana(1)">+1</button>
+</section>
+
+<section class="panel">
+  <button onclick="resetGame()">🔁 Nueva partida</button>
+</section>
 
 <section class="panel">
   <h2>Tablero (Criaturas)</h2>

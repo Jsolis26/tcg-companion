@@ -100,12 +100,20 @@ document.addEventListener("DOMContentLoaded", () => {
     return terrain.apply ? terrain.apply(c) : { atk: 0, def: 0 };
   }
 
-  function atk(c) {
-    return c.card.atk + c.atkTemp + c.atkPerm + terrainBonus(c).atk;
+  function baseAtk(c) {
+    return c.card.atk + c.atkTemp + c.atkPerm;
   }
 
-  function def(c) {
-    return Math.max(c.card.def + terrainBonus(c).def - c.damage, 0);
+  function baseDef(c) {
+    return Math.max(c.card.def - c.damage, 0);
+  }
+
+  function finalAtk(c) {
+    return baseAtk(c) + terrainBonus(c).atk;
+  }
+
+  function finalDef(c) {
+    return Math.max(baseDef(c) + terrainBonus(c).def, 0);
   }
 
   // ======================
@@ -209,13 +217,13 @@ document.addEventListener("DOMContentLoaded", () => {
         </select>
 
         <div class="stat">
-          ATK: ${atk(c)}
-          ${bonus.atk > 0 ? `<span class="bonus">(+${bonus.atk})</span>` : ""}
+          ATK: ${baseAtk(c)}
+          ${bonus.atk > 0 ? `<span class="bonus">+${bonus.atk} → (${finalAtk(c)})</span>` : ""}
         </div>
 
         <div class="stat">
-          DEF: ${def(c)} / ${c.card.def}
-          ${bonus.def > 0 ? `<span class="bonus">(+${bonus.def})</span>` : ""}
+          DEF: ${baseDef(c)} / ${c.card.def}
+          ${bonus.def > 0 ? `<span class="bonus">+${bonus.def} → (${finalDef(c)})</span>` : ""}
         </div>
 
         <div class="stat">⭐ ${c.card.stars}</div>

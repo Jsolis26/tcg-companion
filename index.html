@@ -9,9 +9,8 @@
 
 <h1>TCG Companion</h1>
 
-<!-- VIDA -->
 <section class="panel">
-  <h2>Vida del Jugador</h2>
+  <h2>Vida</h2>
   <div class="value" id="life">30</div>
   <button onclick="changeLife(-1)">-1</button>
   <button onclick="changeLife(1)">+1</button>
@@ -19,7 +18,6 @@
   <button onclick="changeLife(5)">+5</button>
 </section>
 
-<!-- MANÁ -->
 <section class="panel">
   <h2>Maná</h2>
   <div class="value">
@@ -31,14 +29,11 @@
   <button onclick="nextTurn()">Siguiente turno</button>
 </section>
 
-<!-- MESA -->
 <section class="panel">
-  <h2>Mesa (5 criaturas)</h2>
-
+  <h2>Mesa (5 slots)</h2>
   <div id="board" class="board"></div>
 </section>
 
-<!-- REGISTRO -->
 <section class="panel">
   <h2>Registro</h2>
   <ul id="log"></ul>

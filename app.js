@@ -20,19 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("currentMana").innerText = currentMana;
   }
 
-  window.changeLife = a => { life += a; updateUI(); };
-  window.useMana = a => { if (currentMana >= a) currentMana -= a; updateUI(); };
-  window.addTempMana = a => { currentMana += a; updateUI(); };
-  window.nextTurn = () => {
-    if (maxMana < 8) maxMana++;
-    currentMana = maxMana;
-    creatures.forEach(c => c.atkTemp = 0);
-    renderBoard();
-  };
-
-  const elements = ["Todos", ...new Set(CREATURES.map(c => c.element))];
-
-  const creatures = Array.from({ length: 5 }, (_, i) => ({
+  // ======================
+  // ESTADO DE JUEGO
+  // ======================
+  const board = Array.from({ length: 5 }, (_, i) => ({
     slot: i + 1,
     card: null,
     atkTemp: 0,
@@ -41,47 +32,135 @@ document.addEventListener("DOMContentLoaded", () => {
     filter: "Todos"
   }));
 
-  let terrain = null;
+  let activeTerrain = null;
 
-  function baseAtk(c) { return c.card ? c.card.atk + c.atkTemp + c.atkPerm : 0; }
-  function baseDef(c) { return c.card ? Math.max(c.card.def - c.damage, 0) : 0; }
+  const elements = ["Todos", ...new Set(CREATURES.map(c => c.element))];
+  const classes  = [...new Set(CREATURES.map(c => c.class))];
 
-  window.setFilter = (i, v) => { creatures[i].filter = v; creatures[i].card = null; renderBoard(); };
-  window.selectCard = (i, id) => {
-    creatures[i].card = CREATURES.find(c => c.id === id);
-    creatures[i].atkTemp = creatures[i].atkPerm = creatures[i].damage = 0;
+  // ======================
+  // CÁLCULOS
+  // ======================
+  function terrainBonus(card) {
+    if (!activeTerrain || !card) return { atk: 0, def: 0 };
+
+    // afecta por elemento
+    if (activeTerrain.affects?.element === card.element) {
+      return activeTerrain.bonus;
+    }
+
+    // afecta por clase
+    if (activeTerrain.affects?.class === card.class) {
+      return activeTerrain.bonus;
+    }
+
+    return { atk: 0, def: 0 };
+  }
+
+  function baseAtk(slot) {
+    return slot.card ? slot.card.atk + slot.atkTemp + slot.atkPerm : 0;
+  }
+
+  function baseDef(slot) {
+    return slot.card ? Math.max(slot.card.def - slot.damage, 0) : 0;
+  }
+
+  function finalAtk(slot) {
+    return baseAtk(slot) + terrainBonus(slot.card).atk;
+  }
+
+  function finalDef(slot) {
+    return baseDef(slot) + terrainBonus(slot.card).def;
+  }
+
+  // ======================
+  // ACCIONES
+  // ======================
+  window.setFilter = (i, v) => {
+    board[i].filter = v;
+    board[i].card = null;
     renderBoard();
   };
 
+  window.selectCard = (i, id) => {
+    board[i].card = CREATURES.find(c => c.id === id);
+    board[i].atkTemp = board[i].atkPerm = board[i].damage = 0;
+    renderBoard();
+  };
+
+  window.selectTerrain = id => {
+    activeTerrain = TERRAINS.find(t => t.id === id) || null;
+    logEvent(activeTerrain ? `Terreno activo: ${activeTerrain.name}` : "Terreno removido");
+    renderBoard();
+    renderTerrain();
+  };
+
+  // ======================
+  // RENDER
+  // ======================
   function renderBoard() {
-    const board = document.getElementById("board");
-    board.innerHTML = "";
+    const el = document.getElementById("board");
+    el.innerHTML = "";
 
-    creatures.forEach((c, i) => {
-      const list = CREATURES.filter(x => c.filter === "Todos" || x.element === c.filter);
+    board.forEach((slot, i) => {
+      const list = CREATURES.filter(c =>
+        slot.filter === "Todos" || c.element === slot.filter
+      );
 
-      board.innerHTML += `
+      const bonus = slot.card ? terrainBonus(slot.card) : { atk: 0, def: 0 };
+
+      el.innerHTML += `
         <div class="slot">
-          <div class="slot-title">Criatura ${c.slot}</div>
+          <div class="slot-title">Criatura ${slot.slot}</div>
 
           <select onchange="setFilter(${i}, this.value)">
-            ${elements.map(e => `<option ${e===c.filter?"selected":""}>${e}</option>`).join("")}
+            ${elements.map(e => `<option ${e===slot.filter?"selected":""}>${e}</option>`).join("")}
           </select>
 
           <select onchange="selectCard(${i}, this.value)">
             <option value="">— Selecciona —</option>
-            ${list.map(x => `<option value="${x.id}">${x.name}</option>`).join("")}
+            ${list.map(c => `<option value="${c.id}">${c.name}</option>`).join("")}
           </select>
 
-          ${c.card ? `
-            <div>ATK: ${baseAtk(c)}</div>
-            <div>DEF: ${baseDef(c)}</div>
-            <div>⭐ ${c.card.stars}</div>
+          ${slot.card ? `
+            <div class="stat">
+              ATK: ${baseAtk(slot)}
+              ${bonus.atk ? `<span class="bonus">+${bonus.atk} → (${finalAtk(slot)})</span>` : ""}
+            </div>
+            <div class="stat">
+              DEF: ${baseDef(slot)}
+              ${bonus.def ? `<span class="bonus">+${bonus.def} → (${finalDef(slot)})</span>` : ""}
+            </div>
+            <div class="stat">⭐ ${slot.card.stars}</div>
           ` : ""}
-        </div>`;
+        </div>
+      `;
     });
   }
 
+  function renderTerrain() {
+    const el = document.getElementById("terrainSlot");
+    el.innerHTML = `
+      <div class="terrain">
+        <select onchange="selectTerrain(this.value)">
+          <option value="">— Sin Terreno —</option>
+          ${TERRAINS.map(t =>
+            `<option value="${t.id}" ${activeTerrain?.id===t.id?"selected":""}>
+              ${t.name}
+            </option>`
+          ).join("")}
+        </select>
+        ${activeTerrain ? `
+          <div>
+            Afecta: ${activeTerrain.affects?.element || activeTerrain.affects?.class}
+            <br>
+            Bono: +${activeTerrain.bonus.atk || 0} ATK / +${activeTerrain.bonus.def || 0} DEF
+          </div>
+        ` : ""}
+      </div>
+    `;
+  }
+
   renderBoard();
+  renderTerrain();
   updateUI();
 });

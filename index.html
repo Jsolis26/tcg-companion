@@ -11,26 +11,6 @@
 <h1>TCG Companion</h1>
 
 <section class="panel">
-  <h2>Vida</h2>
-  <div class="value" id="life">30</div>
-  <button onclick="changeLife(-1)">-1</button>
-  <button onclick="changeLife(1)">+1</button>
-  <button onclick="changeLife(-5)">-5</button>
-  <button onclick="changeLife(5)">+5</button>
-</section>
-
-<section class="panel">
-  <h2>Maná</h2>
-  <div class="value">
-    <span id="currentMana">1</span> /
-    <span id="maxMana">1</span>
-  </div>
-  <button onclick="useMana(1)">Usar 1</button>
-  <button onclick="addTempMana(1)">+1 temporal</button>
-  <button onclick="nextTurn()">Siguiente turno</button>
-</section>
-
-<section class="panel">
   <h2>Mesa (Criaturas)</h2>
   <div id="board" class="board"></div>
 </section>
@@ -38,15 +18,6 @@
 <section class="panel terrain-panel">
   <h2>Terreno</h2>
   <div id="terrainSlot"></div>
-</section>
-
-<section class="panel">
-  <button class="reset" onclick="resetGame()">Nueva partida</button>
-</section>
-
-<section class="panel">
-  <h2>Registro</h2>
-  <ul id="log"></ul>
 </section>
 
 <script type="module" src="app.js"></script>

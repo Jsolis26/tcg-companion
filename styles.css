@@ -1,7 +1,7 @@
 body {
   font-family: Arial, sans-serif;
   background: #121212;
-  color: #fff;
+  color: #ffffff;
   padding: 20px;
 }
 
@@ -18,14 +18,27 @@ body {
 }
 
 button {
-  margin: 5px;
-  padding: 8px 12px;
-  font-size: 14px;
+  margin: 4px;
+  padding: 6px 10px;
+  font-size: 13px;
   cursor: pointer;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
 }
 
 .creature {
   border: 1px solid #333;
   padding: 10px;
   border-radius: 6px;
+  text-align: center;
+  background: #181818;
+}
+
+.creature h3 {
+  margin: 5px 0;
+  font-size: 14px;
 }

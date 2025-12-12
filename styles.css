@@ -1,39 +1,56 @@
+/* ======================
+   BASE – MOBILE FIRST
+====================== */
+
 body {
   font-family: Arial, sans-serif;
   background: #121212;
   color: #ffffff;
-  padding: 20px;
+  padding: 12px;
+  margin: 0;
+}
+
+h1 {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
 .panel {
   background: #1e1e1e;
-  padding: 15px;
-  margin-bottom: 20px;
+  padding: 12px;
+  margin-bottom: 12px;
   border-radius: 8px;
 }
 
 .value {
-  font-size: 2em;
-  margin: 10px 0;
+  font-size: 1.8em;
+  margin: 8px 0;
+  text-align: center;
 }
 
 button {
-  margin: 4px;
-  padding: 6px 10px;
-  font-size: 13px;
+  width: 100%;
+  margin: 4px 0;
+  padding: 10px;
+  font-size: 14px;
   cursor: pointer;
 }
 
 .reset {
-  width: 100%;
   background: #8b2c2c;
   color: white;
   font-weight: bold;
 }
 
+/* ======================
+   MESA – MOBILE
+   1 COLUMNA
+====================== */
+
 .board {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 1fr;
   gap: 10px;
 }
 
@@ -45,7 +62,31 @@ button {
   text-align: center;
 }
 
+.creature div {
+  margin: 4px 0;
+}
+
 select {
   width: 100%;
+  padding: 8px;
   margin-bottom: 6px;
+  font-size: 14px;
+}
+
+/* ======================
+   TABLET (opcional)
+====================== */
+@media (min-width: 600px) {
+  .board {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ======================
+   DESKTOP (opcional)
+====================== */
+@media (min-width: 900px) {
+  .board {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

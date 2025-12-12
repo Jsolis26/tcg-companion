@@ -1,5 +1,5 @@
 // ===================================================
-// CRIATURAS – TODOS LOS REINOS
+// CRIATURAS – TODOS LOS REINOS (COMPLETO)
 // ===================================================
 
 export const creatures = [
@@ -138,12 +138,147 @@ export const creatures = [
     legendary:true,
     passiveBonus:{ affects:{ element:"Luz" }, bonus:{ atk:0, def:1 } },
     textEffect:"Una vez por turno, cuando recibas daño directo, reduce ese daño en 1."
-  }
+  },
 
+  // ================= VIENTO =================
+  { id:"espiritu_errante_viento", name:"Espíritu Errante", element:"Viento", stars:1, atk:6, def:4, mana:1, class:"Espíritu" },
+  { id:"halcon_cumbres", name:"Halcón de las Cumbres", element:"Viento", stars:2, atk:9, def:7, mana:2, class:"Bestia" },
+  { id:"jinete_viento", name:"Jinete del Viento", element:"Viento", stars:3, atk:12, def:10, mana:3, class:"Guerrero" },
+  { id:"espiritu_tormenta", name:"Espíritu de Tormenta", element:"Viento", stars:4, atk:16, def:13, mana:4, class:"Espíritu" },
+  { id:"maga_aeromante", name:"Maga Aeromante", element:"Viento", stars:5, atk:20, def:17, mana:5, class:"Mago" },
+  { id:"dragon_celeste", name:"Dragón Celeste", element:"Viento", stars:6, atk:25, def:22, mana:6, class:"Dragón" },
+
+  {
+    id:"tempestia_reina",
+    name:"Tempestia, Reina del Aire",
+    element:"Viento",
+    stars:7,
+    atk:31,
+    def:28,
+    mana:7,
+    class:"Espíritu",
+    legendary:true,
+    textEffect:"Al entrar, devuelve 1 criatura enemiga a la mano. Una vez por turno, una criatura enemiga no puede atacar durante su próximo turno."
+  },
+  {
+    id:"zephyrus_senor",
+    name:"Zephyrus, Señor del Cielo",
+    element:"Viento",
+    stars:8,
+    atk:37,
+    def:33,
+    mana:8,
+    class:"Mago",
+    legendary:true,
+    passiveBonus:{ affects:{ element:"Viento" }, bonus:{ atk:1, def:0 } },
+    textEffect:"Una vez por turno, roba 1 carta y descarta 1 carta."
+  },
+
+  // ================= ELECTRICIDAD =================
+  { id:"pulso_erratico", name:"Pulso Errático", element:"Electricidad", stars:1, atk:6, def:4, mana:1, class:"Electricidad" },
+  { id:"serpiente_voltaica", name:"Serpiente Voltaica", element:"Electricidad", stars:2, atk:9, def:7, mana:2, class:"Electricidad" },
+  { id:"guerrero_electro", name:"Guerrero Electromagnético", element:"Electricidad", stars:3, atk:12, def:10, mana:3, class:"Electricidad" },
+  { id:"aguila_relampago", name:"Águila Relámpago", element:"Electricidad", stars:4, atk:16, def:13, mana:4, class:"Electricidad" },
+  { id:"golem_plasma", name:"Gólem de Plasma", element:"Electricidad", stars:5, atk:21, def:17, mana:5, class:"Electricidad" },
+  { id:"titan_trueno", name:"Titán de Trueno", element:"Electricidad", stars:6, atk:26, def:22, mana:6, class:"Electricidad" },
+
+  {
+    id:"dragon_tempestad",
+    name:"Dragón Tempestad",
+    element:"Electricidad",
+    stars:7,
+    atk:32,
+    def:28,
+    mana:7,
+    class:"Electricidad",
+    legendary:true,
+    textEffect:"Al atacar, inflige 1 daño directo al rival. Si destruye una criatura, ese daño es 2."
+  },
+  {
+    id:"coloso_electrico",
+    name:"Coloso Eléctrico",
+    element:"Electricidad",
+    stars:8,
+    atk:38,
+    def:33,
+    mana:8,
+    class:"Electricidad",
+    legendary:true,
+    passiveBonus:{ affects:{ element:"Electricidad" }, bonus:{ atk:1, def:0 } },
+    textEffect:"Una vez por turno, cuando inflijas daño directo, inflige +1 adicional."
+  },
+
+  // ================= PLANTA =================
+  { id:"semilla_errante", name:"Semilla Errante", element:"Planta", stars:1, atk:4, def:6, mana:1, class:"Planta" },
+  { id:"brote_guardian", name:"Brote Guardián", element:"Planta", stars:2, atk:7, def:9, mana:2, class:"Planta" },
+  { id:"guerrero_espinas", name:"Guerrero de Espinas", element:"Planta", stars:3, atk:10, def:12, mana:3, class:"Guerrero" },
+  { id:"arbol_ancestral", name:"Árbol Ancestral", element:"Planta", stars:4, atk:14, def:17, mana:4, class:"Planta" },
+  { id:"druida_verde", name:"Druida Verde", element:"Planta", stars:5, atk:18, def:22, mana:5, class:"Mago" },
+  { id:"ent_colosal", name:"Ent Colosal", element:"Planta", stars:6, atk:22, def:27, mana:6, class:"Bestia" },
+
+  {
+    id:"reina_flores",
+    name:"Reina de las Flores",
+    element:"Planta",
+    stars:7,
+    atk:28,
+    def:33,
+    mana:7,
+    class:"Planta",
+    legendary:true,
+    passiveBonus:{ affects:{ element:"Planta" }, bonus:{ atk:0, def:1 } },
+    textEffect:"Al entrar, cura 2 puntos de vida."
+  },
+  {
+    id:"coloso_raices",
+    name:"Coloso de Raíces",
+    element:"Planta",
+    stars:8,
+    atk:33,
+    def:39,
+    mana:8,
+    class:"Planta",
+    legendary:true,
+    textEffect:"Una vez por turno, cuando recibas daño directo, reduce ese daño en 2. La primera vez que una criatura de Planta sería destruida, pierde -2 DEF en su lugar."
+  },
+
+  // ================= TIERRA =================
+  { id:"golem_roca", name:"Gólem de Roca Menor", element:"Tierra", stars:1, atk:4, def:6, mana:1, class:"Bestia" },
+  { id:"armadillo_valle", name:"Armadillo del Valle", element:"Tierra", stars:2, atk:7, def:9, mana:2, class:"Bestia" },
+  { id:"guerrero_granito", name:"Guerrero de Granito", element:"Tierra", stars:3, atk:10, def:13, mana:3, class:"Guerrero" },
+  { id:"guardian_canon", name:"Guardián del Cañón", element:"Tierra", stars:4, atk:14, def:18, mana:4, class:"Guerrero" },
+  { id:"druida_tierra", name:"Druida de la Tierra", element:"Tierra", stars:5, atk:18, def:23, mana:5, class:"Mago" },
+  { id:"coloso_montana", name:"Coloso de Montaña", element:"Tierra", stars:6, atk:22, def:28, mana:6, class:"Bestia" },
+
+  {
+    id:"titan_cordillera",
+    name:"Titán de la Cordillera",
+    element:"Tierra",
+    stars:7,
+    atk:27,
+    def:34,
+    mana:7,
+    class:"Bestia",
+    legendary:true,
+    textEffect:"Al entrar, una criatura propia gana +4 DEF permanente. Mientras esté en el campo, tus criaturas no pueden perder DEF por efectos del rival."
+  },
+  {
+    id:"gaia_madre",
+    name:"Gaia, Madre de la Tierra",
+    element:"Tierra",
+    stars:8,
+    atk:32,
+    def:40,
+    mana:8,
+    class:"Mago",
+    legendary:true,
+    passiveBonus:{ affects:{ element:"Tierra" }, bonus:{ atk:0, def:1 } },
+    textEffect:"Una vez por turno, la primera vez que una criatura propia sería destruida, no lo es."
+  }
 ];
 
 // ===================================================
-// TERRENOS – CERRADOS
+// TERRENOS – COMPLETOS
 // ===================================================
 
 export const terrains = [
@@ -166,13 +301,41 @@ export const terrains = [
     name:"Volcán en Erupción",
     affects:{ element:"Fuego" },
     bonus:{ atk:2, def:0 },
-    textEffect:"Tus criaturas de Fuego ganan +2 ATK mientras esté activo."
+    textEffect:"Tus criaturas de Fuego ganan +2 ATK mientras esté activo. Cuando una criatura de Fuego destruya una criatura enemiga, inflige 1 daño directo al rival (máx. 2 por turno)."
   },
   {
     id:"templo_luz",
     name:"Templo de la Luz",
     affects:{ element:"Luz" },
     bonus:{ atk:0, def:2 },
-    textEffect:"Tus criaturas de Luz ganan +2 DEF mientras esté activo."
+    textEffect:"Tus criaturas de Luz ganan +2 DEF mientras esté activo. Una vez por turno, puedes curar 1 punto de vida."
+  },
+  {
+    id:"altos_viento",
+    name:"Altos del Viento",
+    affects:{ element:"Viento" },
+    bonus:{ atk:1, def:0 },
+    textEffect:"Tus criaturas de Viento pueden atacar el turno en que son invocadas. Tus criaturas de Viento ganan +1 ATK mientras este terreno esté activo."
+  },
+  {
+    id:"red_alta_tension",
+    name:"Red de Alta Tensión",
+    affects:{ element:"Electricidad" },
+    bonus:{ atk:0, def:0 },
+    textEffect:"Tus criaturas de Electricidad pueden atacar el turno en que son invocadas. Cada vez que destruyas una criatura enemiga, infliges 2 de daño directo al rival mientras este terreno esté activo."
+  },
+  {
+    id:"bosque_sagrado",
+    name:"Bosque Sagrado",
+    affects:{ element:"Planta" },
+    bonus:{ atk:0, def:2 },
+    textEffect:"Tus criaturas de Planta ganan +2 DEF mientras esté activo. La primera criatura de Planta que invoques cada turno gana +1 ATK permanente."
+  },
+  {
+    id:"valle_rocoso",
+    name:"Valle Rocoso",
+    affects:{ element:"Tierra" },
+    bonus:{ atk:0, def:2 },
+    textEffect:"Tus criaturas de Tierra ganan +2 DEF mientras esté activo. La primera vez que una criatura de Tierra fuese a recibir daño cada turno, reduce ese daño en 2."
   }
 ];

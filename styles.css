@@ -43,7 +43,7 @@ h1 {
 
 .stat {
   font-size: 14px;
-  margin: 3px 0;
+  margin: 4px 0;
 }
 
 .bonus {
@@ -52,10 +52,11 @@ h1 {
   margin-left: 6px;
 }
 
-select {
+select, button {
   width: 100%;
   padding: 6px;
   margin-bottom: 6px;
+  font-size: 14px;
 }
 
 .effect-text {

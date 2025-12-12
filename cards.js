@@ -31,9 +31,7 @@ export const creatures = [
   { id:"gigante_magma", name:"Gigante de Magma", element:"Fuego", stars:5, atk:21, def:17, mana:5, class:"Bestia", rarity:"Rara", type:"Criatura" },
   { id:"dragon_carmesi", name:"Dragón Carmesí", element:"Fuego", stars:6, atk:26, def:22, mana:6, class:"Dragón", rarity:"Épica", type:"Criatura" },
   { id:"titan_solar", name:"Titán Solar", element:"Fuego", stars:7, atk:32, def:28, mana:7, class:"Bestia", rarity:"Legendaria", type:"Criatura" },
-  { id:"ignis_senor_llamas", name:"Ignis, Señor de las Llamas Eternas", element:"Fuego", stars:8, atk:38, def:34, mana:8, class:"Mago", rarity:"Legendaria", type:"Criatura" },
-
-  // (Luz, Viento, Electricidad, Planta, Tierra siguen exactamente igual y ya los tengo listos para la v2)
+  { id:"ignis_senor_llamas", name:"Ignis, Señor de las Llamas Eternas", element:"Fuego", stars:8, atk:38, def:34, mana:8, class:"Mago", rarity:"Legendaria", type:"Criatura" }
 ];
 
 // ======================
@@ -42,28 +40,14 @@ export const creatures = [
 export const terrains = [
   { id:"cementerio_oscuro", name:"Cementerio Oscuro", element:"Oscuridad", mana:2, type:"Terreno" },
   { id:"santuario_coral", name:"Santuario de Coral", element:"Agua", mana:2, type:"Terreno" },
-  { id:"volcan_erupcion", name:"Volcán en Erupción", element:"Fuego", mana:2, type:"Terreno" },
-  { id:"templo_luz", name:"Templo de la Luz", element:"Luz", mana:2, type:"Terreno" },
-  { id:"altos_viento", name:"Altos del Viento", element:"Viento", mana:2, type:"Terreno" },
-  { id:"red_alta_tension", name:"Red de Alta Tensión", element:"Electricidad", mana:2, type:"Terreno" },
-  { id:"bosque_sagrado", name:"Bosque Sagrado", element:"Planta", mana:2, type:"Terreno" },
-  { id:"valle_rocoso", name:"Valle Rocoso", element:"Tierra", mana:2, type:"Terreno" }
+  { id:"volcan_erupcion", name:"Volcán en Erupción", element:"Fuego", mana:2, type:"Terreno" }
 ];
 
 // ======================
-// RITUALES (REGISTRADOS)
+// RITUALES (solo registrados)
 // ======================
 export const rituals = [
-  { id:"oscurecer", name:"Oscurecer", element:"Oscuridad", mana:2, rarity:"Común", type:"Ritual" },
-  { id:"pacto_sombras", name:"Pacto de Sombras", element:"Oscuridad", mana:3, rarity:"Común", type:"Ritual" },
-  { id:"ritual_resurreccion", name:"Ritual de Resurrección", element:"Oscuridad", mana:4, rarity:"Rara", type:"Ritual" },
-  { id:"eclipse_sombras", name:"Eclipse de Sombras", element:"Oscuridad", mana:6, rarity:"Épica", type:"Ritual" },
-
-  { id:"oleada_infinita", name:"Oleada Infinita", element:"Agua", mana:2, rarity:"Común", type:"Ritual" },
-  { id:"diluvio_ancestral", name:"Diluvio Ancestral", element:"Agua", mana:6, rarity:"Épica", type:"Ritual" },
-
-  { id:"llamarada_repentina", name:"Llamarada Repentina", element:"Fuego", mana:2, rarity:"Común", type:"Ritual" },
-  { id:"meteorito_ardiente", name:"Meteorito Ardiente", element:"Fuego", mana:6, rarity:"Épica", type:"Ritual" },
-
-  { id:"luminiscencia_eterna", name:"Luminiscencia Eterna", element:"Luz", mana:6, rarity:"Épica", type:"Ritual" }
+  { id:"oscurecer", name:"Oscurecer", element:"Oscuridad", mana:2, type:"Ritual" },
+  { id:"oleada_infinita", name:"Oleada Infinita", element:"Agua", mana:2, type:"Ritual" },
+  { id:"llamarada_repentina", name:"Llamarada Repentina", element:"Fuego", mana:2, type:"Ritual" }
 ];

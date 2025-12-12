@@ -2,26 +2,21 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Crónicas TCG</title>
+  <title>TCG Companion</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<h1>Crónicas TCG</h1>
+<h1>TCG Companion</h1>
 
 <section class="panel">
   <h2>Jugador</h2>
-
-  <div class="stat">
-    ❤️ Vida: <strong id="life">40</strong>
-  </div>
+  <div class="stat">❤️ Vida: <strong id="life">40</strong></div>
   <button onclick="changeLife(-1)">-1</button>
   <button onclick="changeLife(1)">+1</button>
 
-  <div class="stat" style="margin-top:8px">
-    🔮 Maná: <strong><span id="currentMana">3</span></strong>
-  </div>
+  <div class="stat" style="margin-top:8px">🔮 Maná: <strong id="currentMana">3</strong></div>
   <button onclick="useMana(1)">Usar 1</button>
   <button onclick="addMana(1)">+1</button>
 </section>
@@ -31,7 +26,7 @@
 </section>
 
 <section class="panel">
-  <h2>Tablero (Criaturas)</h2>
+  <h2>Mesa (Criaturas)</h2>
   <div id="board" class="board"></div>
 </section>
 

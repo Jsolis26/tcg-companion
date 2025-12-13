@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     filter: "Todos",
     modAtk: 0,
     modDef: 0
+    position: "ATK" // ATK | DEF
   }));
 
   let activeTerrain = null;
@@ -54,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Pasivos legendarios
-    board.forEach(s => {
+    .forEach(s => {
       if (s.card?.legendary && s.card.passiveBonus) {
         const a = s.card.passiveBonus.affects;
         if (
@@ -138,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
     maxMana = 3;
     log.length = 0;
 
-    board.forEach(s => {
+    .forEach(s => {
       s.card = null;
       s.filter = "Todos";
       s.modAtk = 0;
@@ -154,8 +155,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // TABLERO (CRIATURAS)
   // ======================
   window.setFilter = (i, v) => {
-    board[i].filter = v;
-    board[i].card = null;
+    [i].filter = v;
+    [i].card = null;
     board[i].modAtk = 0;
     board[i].modDef = 0;
     addLog(`📂 Criatura ${i + 1}: filtro → ${v}`);
@@ -167,6 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
     board[i].card = card;
     board[i].modAtk = 0;
     board[i].modDef = 0;
+    board[i].position = "ATK";
 
     if (card) {
       addLog(`🧙 Invoca ${card.name} en Criatura ${i + 1}`);
@@ -193,6 +195,13 @@ document.addEventListener("DOMContentLoaded", () => {
     addLog(`🧹 Criatura ${i + 1}: modificadores limpiados`);
     render();
   };
+
+window.togglePosition = i => {
+  board[i].position = board[i].position === "ATK" ? "DEF" : "ATK";
+  addLog(`🔄 Criatura ${i + 1}: cambia a ${board[i].position}`);
+  render();
+};
+
 
   // ======================
   // TERRENO
@@ -250,6 +259,15 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="stat ${s.card.legendary ? "legendary" : ""}">
               ${s.card.name}
             </div>
+
+            <div class="stat position ${s.position === "ATK" ? "pos-atk" : "pos-def"}">
+  ${s.position === "ATK" ? "⚔️ Posición de Ataque" : "🛡️ Posición de Defensa"}
+</div>
+
+<button onclick="togglePosition(${i})">
+  Cambiar a ${s.position === "ATK" ? "DEF" : "ATK"}
+</button>
+
 
             <div class="stat atk">
   ATK: ${s.card.atk}
@@ -309,4 +327,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   render();
 });
+
 

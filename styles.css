@@ -362,3 +362,8 @@ select option:checked {
   font-size: 0.8em;
 }
 
+.el-icon {
+  font-size: 1.1em;
+  line-height: 1;
+}
+

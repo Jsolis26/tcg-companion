@@ -3,6 +3,11 @@ import { creatures as CREATURES, terrains as TERRAINS } from "./cards.js";
 document.addEventListener("DOMContentLoaded", () => {
 
   // ======================
+  // CONFIGURACIÓN GENERAL
+  // ======================
+  const MAX_MANA_LIMIT = 8;
+
+  // ======================
   // ESTADO DE PARTIDA
   // ======================
   let life = 40;
@@ -18,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }));
 
   let activeTerrain = null;
-
   const elements = ["Todos", ...new Set(CREATURES.map(c => c.element))];
 
   // ======================
@@ -67,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ======================
-  // CONTROLES GLOBALES
+  // CONTROLES DE JUGADOR
   // ======================
   window.changeLife = v => {
     life += v;
@@ -87,15 +91,41 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addMana = v => {
     mana += v;
     if (mana < 0) mana = 0;
+    if (mana > maxMana) mana = maxMana;
     addLog(`🔮 Maná ${v > 0 ? "➕" : "➖"}${Math.abs(v)} → ${mana}/${maxMana}`);
     render();
   };
 
   window.addMaxMana = v => {
+    const before = maxMana;
     maxMana += v;
+
+    if (maxMana > MAX_MANA_LIMIT) maxMana = MAX_MANA_LIMIT;
     if (maxMana < 0) maxMana = 0;
     if (mana > maxMana) mana = maxMana;
-    addLog(`🔷 Máx. maná ${v > 0 ? "➕" : "➖"}${Math.abs(v)} → ${maxMana}`);
+
+    if (maxMana !== before) {
+      addLog(`🔷 Máx. maná ajustado → ${maxMana}`);
+    } else {
+      addLog(`🔷 Máx. maná permanece en ${maxMana} (límite)`);
+    }
+
+    render();
+  };
+
+  // ======================
+  // FIN DE TURNO
+  // ======================
+  window.endTurn = () => {
+    if (maxMana < MAX_MANA_LIMIT) {
+      maxMana++;
+      addLog(`🔄 Fin de turno → Máx. maná sube a ${maxMana}`);
+    } else {
+      addLog(`🔄 Fin de turno → Máx. maná ya está en ${MAX_MANA_LIMIT}`);
+    }
+
+    mana = maxMana;
+    addLog(`🔮 Maná restaurado a ${mana}/${maxMana}`);
     render();
   };
 
@@ -116,12 +146,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     activeTerrain = null;
-    addLog("🔄 Nueva partida iniciada");
+    addLog("🆕 Nueva partida iniciada");
     render();
   };
 
   // ======================
-  // TABLERO
+  // TABLERO (CRIATURAS)
   // ======================
   window.setFilter = (i, v) => {
     board[i].filter = v;
@@ -139,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
     board[i].modDef = 0;
 
     if (card) {
-      addLog(`🧙 Invoca <strong>${card.name}</strong> en Criatura ${i + 1}`);
+      addLog(`🧙 Invoca ${card.name} en Criatura ${i + 1}`);
     }
 
     render();
@@ -171,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
     activeTerrain = TERRAINS.find(t => t.id === id) || null;
 
     if (activeTerrain) {
-      addLog(`🌍 Terreno activo: <strong>${activeTerrain.name}</strong>`);
+      addLog(`🌍 Terreno activo: ${activeTerrain.name}`);
     } else {
       addLog("🌍 Terreno removido");
     }
@@ -187,9 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("currentMana").innerText = mana;
 
     const maxManaEl = document.getElementById("maxMana");
-    if (maxManaEl) {
-      maxManaEl.innerText = maxMana;
-    }
+    if (maxManaEl) maxManaEl.innerText = maxMana;
 
     const boardEl = document.getElementById("board");
     boardEl.innerHTML = "";
@@ -225,29 +253,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <div class="stat">
               ATK: ${s.card.atk}
-              ${auto.atk !== 0 ? ` (<span class="auto">+${auto.atk}</span>)` : ""}
-              ${s.modAtk !== 0 ? ` (<span class="manual">${s.modAtk > 0 ? "+" : ""}${s.modAtk}</span>)` : ""}
+              ${auto.atk ? ` (<span class="auto">+${auto.atk}</span>)` : ""}
+              ${s.modAtk ? ` (<span class="manual">${s.modAtk > 0 ? "+" : ""}${s.modAtk}</span>)` : ""}
               → <strong>${s.card.atk + auto.atk + s.modAtk}</strong>
             </div>
 
             <div class="stat">
               DEF: ${s.card.def}
-              ${auto.def !== 0 ? ` (<span class="auto">+${auto.def}</span>)` : ""}
-              ${s.modDef !== 0 ? ` (<span class="manual">${s.modDef > 0 ? "+" : ""}${s.modDef}</span>)` : ""}
+              ${auto.def ? ` (<span class="auto">+${auto.def}</span>)` : ""}
+              ${s.modDef ? ` (<span class="manual">${s.modDef > 0 ? "+" : ""}${s.modDef}</span>)` : ""}
               → <strong>${s.card.def + auto.def + s.modDef}</strong>
             </div>
 
             <div class="stat">
               Mod ATK:
-              <button onclick="modAtk(${i}, 1)">+</button>
-              <button onclick="modAtk(${i}, -1)">−</button>
+              <button onclick="modAtk(${i},1)">+</button>
+              <button onclick="modAtk(${i},-1)">−</button>
               (${s.modAtk})
             </div>
 
             <div class="stat">
               Mod DEF:
-              <button onclick="modDef(${i}, 1)">+</button>
-              <button onclick="modDef(${i}, -1)">−</button>
+              <button onclick="modDef(${i},1)">+</button>
+              <button onclick="modDef(${i},-1)">−</button>
               (${s.modDef})
             </div>
 
@@ -268,10 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
           `<option value="${t.id}" ${activeTerrain?.id === t.id ? "selected" : ""}>${t.name}</option>`
         ).join("")}
       </select>
-
-      ${activeTerrain ? `
-        <div class="effect-text">${activeTerrain.textEffect}</div>
-      ` : ""}
+      ${activeTerrain ? `<div class="effect-text">${activeTerrain.textEffect}</div>` : ""}
     `;
 
     const logEl = document.getElementById("log");

@@ -23,8 +23,11 @@
 
 <section class="panel">
   <h2>Partida</h2>
-  <button onclick="resetGame()">🔁 Nueva partida</button>
+  <div class="stat">Turno: <strong id="turnNumber">1</strong></div>
+  <div class="stat">Fase: <strong id="phaseName">Inicio</strong></div>
+  <button onclick="nextPhase()">➡️ Siguiente fase</button>
 </section>
+
 
 
 <section class="panel">
@@ -40,4 +43,5 @@
 <script type="module" src="app.js"></script>
 </body>
 </html>
+
 

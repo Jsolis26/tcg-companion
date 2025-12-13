@@ -200,3 +200,24 @@ button:active {
   border-bottom: 1px dashed #222;
   padding-bottom: 4px;
 }
+
+/* ===== POSICIÓN DE BATALLA ===== */
+.position {
+  font-size: 0.85em;
+  padding: 4px 6px;
+  border-radius: 6px;
+  margin: 6px 0;
+  display: inline-block;
+}
+
+.pos-atk {
+  background: rgba(255, 107, 107, 0.15);
+  border: 1px solid #ff6b6b;
+  color: #ff6b6b;
+}
+
+.pos-def {
+  background: rgba(111, 207, 151, 0.15);
+  border: 1px solid #6fcf97;
+  color: #6fcf97;
+}

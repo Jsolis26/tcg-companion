@@ -350,6 +350,28 @@ window.togglePosition = i => {
 });
 
 
+window.toggleElementDropdown = i => {
+  document.querySelectorAll(".element-options").forEach((el, idx) => {
+    if (idx !== i) el.style.display = "none";
+  });
+
+  const box = document.getElementById(`element-options-${i}`);
+  box.style.display = box.style.display === "block" ? "none" : "block";
+};
+
+window.selectElement = (i, value) => {
+  setFilter(i, value);
+  const box = document.getElementById(`element-options-${i}`);
+  if (box) box.style.display = "none";
+};
+
+document.addEventListener("click", e => {
+  if (!e.target.closest(".element-dropdown")) {
+    document.querySelectorAll(".element-options")
+      .forEach(el => el.style.display = "none");
+  }
+});
+
 
 
 

@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     modAtk: 0,
     modDef: 0,
     position: "ATK" // ATK | DEF
+    summonedThisTurn: false
   }));
 
   let activeTerrain = null;
@@ -125,9 +126,15 @@ document.addEventListener("DOMContentLoaded", () => {
       addLog(`🔄 Fin de turno → Máx. maná ya está en ${MAX_MANA_LIMIT}`);
     }
 
-    mana = maxMana;
-    addLog(`🔮 Maná restaurado a ${mana}/${maxMana}`);
-    render();
+mana = maxMana;
+addLog(`🔮 Maná restaurado a ${mana}/${maxMana}`);
+
+board.forEach(s => {
+  s.summonedThisTurn = false;
+});
+
+render();
+
   };
 
   // ======================
@@ -171,6 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
     board[i].modAtk = 0;
     board[i].modDef = 0;
     board[i].position = "ATK";
+    board[i].summonedThisTurn = true;
 
     if (card) {
       addLog(`🧙 Invoca ${card.name} en Criatura ${i + 1}`);
@@ -241,7 +249,7 @@ window.togglePosition = i => {
       const auto = s.card ? autoBonus(s.card) : { atk: 0, def: 0 };
 
       boardEl.innerHTML += `
-        <div class="slot">
+<div class="slot ${s.summonedThisTurn ? "summoned" : ""}">
           <div class="slot-title">Criatura ${s.slot}</div>
 
           <select onchange="setFilter(${i}, this.value)">
@@ -329,6 +337,7 @@ window.togglePosition = i => {
 
   render();
 });
+
 
 
 

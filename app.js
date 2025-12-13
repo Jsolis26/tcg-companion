@@ -2,12 +2,14 @@ import { creatures as CREATURES, terrains as TERRAINS } from "./cards.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ======================
-  // ESTADO GLOBAL
-  // ======================
+  /* =========================
+     ESTADO GLOBAL
+  ========================== */
+
   let life = 40;
-  let mana = 3;
+
   let maxMana = 3;
+  let mana = 3;
 
   let turn = 1;
 
@@ -21,25 +23,45 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
   let phaseIndex = 0;
 
+  /* =========================
+     MESA (5 SLOTS)
+  ========================== */
+
   const board = Array.from({ length: 5 }, (_, i) => ({
     slot: i + 1,
     card: null,
     filter: "Todos",
+    position: "ataque",
     summonedThisTurn: false,
     hasAttacked: false,
-    position: "ataque"
+    positionChangedThisTurn: false
   }));
 
   let activeTerrain = null;
+
   const elements = ["Todos", ...new Set(CREATURES.map(c => c.element))];
 
-  // ======================
-  // BONOS
-  // ======================
+  /* =========================
+     UTILIDADES
+  ========================== */
+
+  function currentPhase() {
+    return phases[phaseIndex];
+  }
+
+  function isCombatPhase() {
+    return currentPhase() === "Combate";
+  }
+
+  /* =========================
+     BONOS (TERRENO + LEGENDARIOS)
+  ========================== */
+
   function totalBonus(card) {
     let atk = 0;
     let def = 0;
 
+    // Terreno
     if (activeTerrain) {
       if (
         activeTerrain.affects.element === card.element ||
@@ -50,11 +72,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    board.forEach(s => {
-      const c = s.card;
+    // Legendarios en mesa
+    board.forEach(slot => {
+      const c = slot.card;
       if (c?.legendary && c.passiveBonus) {
         const a = c.passiveBonus.affects;
-        if (a.element === card.element || a.class === card.class) {
+        if (
+          a.element === card.element ||
+          a.class === card.class
+        ) {
           atk += c.passiveBonus.bonus.atk;
           def += c.passiveBonus.bonus.def;
         }
@@ -64,9 +90,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return { atk, def };
   }
 
-  // ======================
-  // FASES
-  // ======================
+  /* =========================
+     TURNOS Y FASES
+  ========================== */
+
   window.nextPhase = () => {
     phaseIndex++;
 
@@ -76,42 +103,23 @@ document.addEventListener("DOMContentLoaded", () => {
       startTurn();
     }
 
-    handlePhase();
     render();
   };
 
   function startTurn() {
-    maxMana++;
+    maxMana += 1;
     mana = maxMana;
 
     board.forEach(s => {
       s.hasAttacked = false;
+      s.positionChangedThisTurn = false;
       s.summonedThisTurn = false;
     });
   }
 
-  function handlePhase() {
-    const phase = phases[phaseIndex];
-
-    if (phase === "Inicio") {
-      // reservado para triggers futuros
-    }
-
-    if (phase === "Robo") {
-      // más adelante: robar carta
-    }
-
-    if (phase === "Final") {
-      // más adelante: descarte, efectos finales
-    }
-  }
-
-  // ======================
-  // ACCIONES
-  // ======================
-  window.changeLife = v => { life += v; render(); };
-  window.useMana = v => { if (mana >= v) mana -= v; render(); };
-  window.addMana = v => { mana += v; render(); };
+  /* =========================
+     ACCIONES GENERALES
+  ========================== */
 
   window.resetGame = () => {
     life = 40;
@@ -124,23 +132,52 @@ document.addEventListener("DOMContentLoaded", () => {
     board.forEach(s => {
       s.card = null;
       s.filter = "Todos";
-      s.hasAttacked = false;
-      s.summonedThisTurn = false;
       s.position = "ataque";
+      s.summonedThisTurn = false;
+      s.hasAttacked = false;
+      s.positionChangedThisTurn = false;
     });
 
     render();
   };
 
-  window.setFilter = (i, v) => {
-    board[i].filter = v;
+  window.changeLife = v => {
+    life += v;
+    render();
+  };
+
+  window.useMana = cost => {
+    if (mana >= cost) {
+      mana -= cost;
+      render();
+    }
+  };
+
+  /* =========================
+     SELECCIÓN DE CARTAS
+  ========================== */
+
+  window.setFilter = (i, value) => {
+    board[i].filter = value;
     board[i].card = null;
     render();
   };
 
   window.selectCard = (i, id) => {
-    board[i].card = CREATURES.find(c => c.id === id) || null;
+    if (!id) {
+      board[i].card = null;
+      render();
+      return;
+    }
+
+    const card = CREATURES.find(c => c.id === id);
+    if (!card) return;
+
+    board[i].card = card;
     board[i].summonedThisTurn = true;
+    board[i].hasAttacked = false;
+    board[i].position = "ataque";
+
     render();
   };
 
@@ -149,20 +186,62 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   };
 
-  // ======================
-  // RENDER
-  // ======================
+  /* =========================
+     POSICIÓN DE BATALLA
+  ========================== */
+
+  window.togglePosition = i => {
+    const slot = board[i];
+
+    if (!slot.card) return;
+    if (slot.summonedThisTurn) return;
+    if (slot.positionChangedThisTurn) return;
+    if (isCombatPhase()) return;
+
+    slot.position =
+      slot.position === "ataque" ? "defensa" : "ataque";
+
+    slot.positionChangedThisTurn = true;
+    render();
+  };
+
+  /* =========================
+     COMBATE BÁSICO
+  ========================== */
+
+  window.attackPlayer = i => {
+    if (!isCombatPhase()) return;
+
+    const slot = board[i];
+    if (!slot.card) return;
+    if (slot.hasAttacked) return;
+    if (slot.summonedThisTurn) return;
+    if (slot.position !== "ataque") return;
+
+    const damage = slot.card.stars;
+    life -= damage;
+
+    slot.hasAttacked = true;
+
+    alert(`${slot.card.name} inflige ${damage} de daño directo`);
+    render();
+  };
+
+  /* =========================
+     RENDER
+  ========================== */
+
   function render() {
     document.getElementById("life").innerText = life;
     document.getElementById("currentMana").innerText = mana;
     document.getElementById("turnNumber").innerText = turn;
-    document.getElementById("phaseName").innerText = phases[phaseIndex];
+    document.getElementById("phaseName").innerText = currentPhase();
 
     const boardEl = document.getElementById("board");
     boardEl.innerHTML = "";
 
     board.forEach((slot, i) => {
-      const list = CREATURES.filter(c =>
+      const availableCards = CREATURES.filter(c =>
         slot.filter === "Todos" || c.element === slot.filter
       );
 
@@ -180,7 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <select onchange="selectCard(${i}, this.value)">
             <option value="">— Selecciona —</option>
-            ${list.map(c =>
+            ${availableCards.map(c =>
               `<option value="${c.id}" ${slot.card?.id === c.id ? "selected" : ""}>${c.name}</option>`
             ).join("")}
           </select>
@@ -188,6 +267,11 @@ document.addEventListener("DOMContentLoaded", () => {
           ${slot.card ? `
             <div class="stat ${slot.card.legendary ? "legendary" : ""}">
               ${slot.card.name}
+            </div>
+
+            <div class="stat">
+              Posición: ${slot.position.toUpperCase()}
+              <button onclick="togglePosition(${i})">Cambiar</button>
             </div>
 
             <div class="stat">
@@ -207,6 +291,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 <strong>Efecto legendario:</strong><br>
                 ${slot.card.textEffect}
               </div>
+            ` : ""}
+
+            ${isCombatPhase() ? `
+              <button onclick="attackPlayer(${i})">Atacar jugador</button>
             ` : ""}
           ` : ""}
         </div>

@@ -272,12 +272,31 @@ window.togglePosition = i => {
 </div>
 
 
-          <select onchange="selectCard(${i}, this.value)">
-            <option value="">— Selecciona —</option>
-            ${list.map(c =>
-              `<option value="${c.id}" ${s.card?.id === c.id ? "selected" : ""}>${c.name}</option>`
-            ).join("")}
-          </select>
+<div class="creature-dropdown">
+  <button class="creature-selected"
+          onclick="toggleCreatureDropdown(${i})"
+          ${!s.filter || s.filter === "Todos" ? "" : ""}>
+    ${s.card ? `
+      <span class="el-icon">${getElementIcon(s.card.element)}</span>
+      <span class="creature-name">${s.card.name}</span>
+      <span class="stars">${"⭐".repeat(s.card.stars)}</span>
+    ` : `
+      <span class="creature-placeholder">🧙 Seleccionar criatura</span>
+    `}
+  </button>
+
+  <div class="creature-options" id="creature-options-${i}">
+    ${list.map(c => `
+      <div class="creature-option"
+           onclick="selectCreature(${i}, '${c.id}')">
+        <span class="el-icon">${getElementIcon(c.element)}</span>
+        <span class="creature-name">${c.name}</span>
+        <span class="stars">${"⭐".repeat(c.stars)}</span>
+      </div>
+    `).join("")}
+  </div>
+</div>
+
 
           ${s.card ? `
             <div class="stat ${s.card.legendary ? "legendary" : ""}">
@@ -391,6 +410,28 @@ function getElementIcon(el) {
   }
 }
 
+window.toggleCreatureDropdown = i => {
+  document.querySelectorAll(".creature-options").forEach((el, idx) => {
+    if (idx !== i) el.style.display = "none";
+  });
+
+  const box = document.getElementById(`creature-options-${i}`);
+  box.style.display = box.style.display === "block" ? "none" : "block";
+};
+
+window.selectCreature = (i, id) => {
+  selectCard(i, id);
+  const box = document.getElementById(`creature-options-${i}`);
+  if (box) box.style.display = "none";
+};
+
+document.addEventListener("click", e => {
+  if (!e.target.closest(".element-dropdown") &&
+      !e.target.closest(".creature-dropdown")) {
+    document.querySelectorAll(".element-options, .creature-options")
+      .forEach(el => el.style.display = "none");
+  }
+});
 
 
 

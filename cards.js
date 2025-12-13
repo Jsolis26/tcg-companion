@@ -19,10 +19,7 @@ export const creatures = [
     class:"Dragón",
     stars:7, atk:30, def:30, mana:7,
     legendary:true,
-    textEffect:`La primera vez por turno que sería destruido, no lo es.
-Al ser destruido, crea una Sombra 0/4
-(+2 ATK si controlas a Kael).
-`
+    textEffect:`La primera vez por turno que sería destruido, no lo es. Al ser destruido, crea una Sombra 0/4 (+2 ATK si controlas a Kael)`
   },
   {
     id:"kael-senor-sombras",
@@ -31,13 +28,7 @@ Al ser destruido, crea una Sombra 0/4
     class:"Sombra",
     stars:8, atk:36, def:38, mana:8,
     legendary:true,
-    textEffect:`Tus Sombras ganan +1 ATK.
-Una vez por turno, cuando una criatura Sombra vaya al Cementerio:
-Kael gana +1 ATK permanente.
-Una vez por turno, puedes revivir 1 criatura Sombra
-de hasta 4 estrellas pagando 2 maná.
-No puede atacar ese turno.
-`,
+    textEffect:`Tus Sombras ganan +1 ATK. Una vez por turno, cuando una criatura Sombra vaya al Cementerio: Kael gana +1 ATK permanente. Una vez por turno, puedes revivir 1 criatura Sombra de hasta 4 estrellas pagando 2 maná. No puede atacar ese turno.`,
     passiveBonus:{ affects:{ class:"Sombra" }, bonus:{ atk:1, def:0 } }
   },
 
@@ -56,10 +47,7 @@ No puede atacar ese turno.
     class:"Dragón",
     stars:7, atk:30, def:30, mana:7,
     legendary:true,
-    textEffect:`Al atacar:
-La criatura defensora pierde -2 DEF este turno.
-Si destruye una criatura, roba 1 carta.
-`
+    textEffect:`Al atacar la criatura defensora pierde -2 DEF este turno. Si destruye una criatura, roba 1 carta.`
   },
   {
     id:"aqualis-reina-profundidades",
@@ -68,11 +56,7 @@ Si destruye una criatura, roba 1 carta.
     class:"Mago",
     stars:8, atk:35, def:37, mana:8,
     legendary:true,
-    textEffect:`
-Tus criaturas de Agua ganan +1 DEF.
-Durante tu turno,
-puedes cambiar una criatura a DEF.
-`,
+    textEffect:`Tus criaturas de Agua ganan +1 DEF. Durante tu turno Puedes cambiar una criatura a DEF.`,
     passiveBonus:{ affects:{ element:"Agua" }, bonus:{ atk:0, def:1 } }
   },
 
@@ -91,8 +75,7 @@ puedes cambiar una criatura a DEF.
     class:"Bestia",
     stars:7, atk:32, def:28, mana:7,
     legendary:true,
-    textEffect:`Al atacar Inflige 1 daño directo al rival. Si destruye una criatura Inflige 1 daño adicional.
-`
+    textEffect:`Al atacar Inflige 1 daño directo al rival. Si destruye una criatura Inflige 1 daño adicional.`
   },
   {
     id:"ignis-llamas-eternas",
@@ -101,13 +84,7 @@ puedes cambiar una criatura a DEF.
     class:"Mago",
     stars:8, atk:38, def:34, mana:8,
     legendary:true,
-    textEffect:`
-Tus criaturas de Fuego ganan +1 ATK.
-
-Una vez por turno:
-Si una criatura enemiga fue destruida,
-inflige 2 de daño al rival.
-`,
+    textEffect:`Tus criaturas de Fuego ganan +1 ATK. Una vez por turno Si una criatura enemiga fue destruida, inflige 2 de daño al rival.`,
     passiveBonus:{ affects:{ element:"Fuego" }, bonus:{ atk:1, def:0 } }
   },
 
@@ -126,14 +103,7 @@ inflige 2 de daño al rival.
     class:"Eterno",
     stars:7, atk:29, def:32, mana:7,
     legendary:true,
-    textEffect:`
-Al entrar:
-Una criatura propia gana +3 DEF permanente.
-
-La primera vez por turno
-que una criatura propia sería destruida,
-no lo es.
-`
+    textEffect:`Al entrar Una criatura propia gana +3 DEF permanente. La primera vez por turno que una criatura propia sería destruida, no lo es.`
   },
   {
     id:"solarius-emperador-radiante",
@@ -142,13 +112,7 @@ no lo es.
     class:"Eterno",
     stars:8, atk:34, def:38, mana:8,
     legendary:true,
-    textEffect:`
-Tus criaturas de Luz ganan +1 DEF.
-
-Una vez por turno,
-cuando recibas daño directo,
-reduce ese daño en 1.
-`,
+    textEffect:`Tus criaturas de Luz ganan +1 DEF. Una vez por turno, cuando recibas daño directo, reduce ese daño en 1.`,
     passiveBonus:{ affects:{ element:"Luz" }, bonus:{ atk:0, def:1 } }
   },
 
@@ -167,14 +131,7 @@ reduce ese daño en 1.
     class:"Espíritu",
     stars:7, atk:31, def:28, mana:7,
     legendary:true,
-    textEffect:`
-Al entrar:
-Devuelve 1 criatura enemiga a la mano.
-
-Una vez por turno:
-Una criatura enemiga no puede atacar
-durante su próximo turno.
-`
+    textEffect:`Al entrar Devuelve 1 criatura enemiga a la mano. Una vez por turn: Una criatura enemiga no puede atacar durante su proximo turno.`
   },
   {
     id:"zephyrus-senor-cielo",
@@ -183,12 +140,7 @@ durante su próximo turno.
     class:"Mago",
     stars:8, atk:37, def:33, mana:8,
     legendary:true,
-    textEffect:`
-Tus criaturas de Viento ganan +1 ATK.
-
-Una vez por turno:
-Roba 1 carta y descarta 1 carta.
-`,
+    textEffect:`Tus criaturas de Viento ganan +1 ATK. Una vez por turno Roba 1 carta y descarta 1 carta.`,
     passiveBonus:{ affects:{ element:"Viento" }, bonus:{ atk:1, def:0 } }
   },
 
@@ -207,13 +159,7 @@ Roba 1 carta y descarta 1 carta.
     class:"Electricidad",
     stars:7, atk:32, def:28, mana:7,
     legendary:true,
-    textEffect:`
-Al atacar:
-Inflige 1 daño directo al rival.
-
-Si destruye una criatura,
-ese daño es 2.
-`
+    textEffect:`Al atacar Inflige 1 daño directo al rival. Si destruye una criatura, ese daño es 2.ese daño es 2.`
   },
   {
     id:"coloso-electrico",
@@ -222,13 +168,7 @@ ese daño es 2.
     class:"Electricidad",
     stars:8, atk:38, def:33, mana:8,
     legendary:true,
-    textEffect:`
-Tus criaturas de Electricidad ganan +1 ATK.
-
-Una vez por turno:
-Cuando inflijas daño directo,
-inflige +1 adicional.
-`,
+    textEffect:`Tus criaturas de Electricidad ganan +1 ATK. Una vez por turno Cuando inflijas daño directo, inflige +1 adicional.`,
     passiveBonus:{ affects:{ element:"Electricidad" }, bonus:{ atk:1, def:0 } }
   },
 
@@ -247,12 +187,7 @@ inflige +1 adicional.
     class:"Planta",
     stars:7, atk:28, def:33, mana:7,
     legendary:true,
-    textEffect:`
-Al entrar:
-Cura 2 puntos de vida.
-
-Tus criaturas de Planta ganan +1 DEF.
-`,
+    textEffect:`Al entrar Cura 2 puntos de vida. Tus criaturas de Planta ganan +1 DEF.`,
     passiveBonus:{ affects:{ element:"Planta" }, bonus:{ atk:0, def:1 } }
   },
   {
@@ -262,15 +197,7 @@ Tus criaturas de Planta ganan +1 DEF.
     class:"Planta",
     stars:8, atk:33, def:39, mana:8,
     legendary:true,
-    textEffect:`
-Una vez por turno,
-cuando recibas daño directo,
-reduce ese daño en 2.
-
-La primera vez que una criatura de Planta
-sería destruida,
-pierde -2 DEF en su lugar.
-`
+    textEffect:`Una vez por turno, cuando recibas daño directo, reduce ese daño en 2. Una vez por turno, la primera vez que una criatura de Planta sería destruida, pierde -2 DEF en su lugar.`
   },
 
   // ================= TIERRA =================
@@ -288,14 +215,7 @@ pierde -2 DEF en su lugar.
     class:"Bestia",
     stars:7, atk:27, def:34, mana:7,
     legendary:true,
-    textEffect:`
-Al entrar:
-Una criatura propia gana +4 DEF permanente.
-
-Mientras esté en el campo,
-tus criaturas no pueden perder DEF
-por efectos del rival.
-`
+    textEffect:`Al entrar Una criatura propia gana +4 DEF permanente. Mientras esté en el campo, tus criaturas no pueden perder DEF por efectos del rival.`
   },
   {
     id:"gaia-madre-tierra",
@@ -304,14 +224,7 @@ por efectos del rival.
     class:"Mago",
     stars:8, atk:32, def:40, mana:8,
     legendary:true,
-    textEffect:`
-Tus criaturas de Tierra ganan +1 DEF.
-
-Una vez por turno,
-la primera vez que una criatura propia
-sería destruida,
-no lo es.
-`,
+    textEffect:`Tus criaturas de Tierra ganan +1 DEF. Una vez por turno La primera vez que una criatura propia sería destruida, no lo es.`,
     passiveBonus:{ affects:{ element:"Tierra" }, bonus:{ atk:0, def:1 } }
   }
 
@@ -379,5 +292,6 @@ export const terrains = [
     textEffect:"Tus criaturas de Tierra ganan +2 DEF mientras esté activo. La primera vez que una criatura de Tierra fuese a recibir daño cada turno, reduce ese daño en 2."
   }
 ];
+
 
 

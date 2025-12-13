@@ -1,58 +1,28 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Crónicas TCG</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-<h1>Crónicas TCG</h1>
-
 <section class="panel">
   <h2>Jugador</h2>
-  <div class="stat">❤️ Vida: <strong id="life">40</strong></div>
-  <button onclick="changeLife(-1)">-</button>
-  <button onclick="changeLife(1)">+</button>
 
-<div class="stat" style="margin-top:8px">
-  🔮 Maná: <strong id="currentMana">3</strong> / <strong id="maxMana">3</strong>
-</div>
+  <div class="row-inline">
 
-  <button onclick="useMana(1)">-</button>
-  <button onclick="addMana(1)">+</button>
+    <!-- Vida -->
+    <div class="inline-block">
+      <div class="stat">❤️ Vida: <strong id="life">40</strong></div>
+      <button onclick="changeLife(-1)">−</button>
+      <button onclick="changeLife(1)">+</button>
+    </div>
+
+    <!-- Maná -->
+    <div class="inline-block">
+      <div class="stat">
+        🔮 Maná:
+        <strong id="currentMana">3</strong> /
+        <strong id="maxMana">3</strong>
+      </div>
+      <button onclick="useMana(1)">−</button>
+      <button onclick="addMana(1)">+</button>
+    </div>
+
+  </div>
 </section>
-
-<section class="panel">
-  <h2>Partida</h2>
-  <button onclick="endTurn()">🔄 Fin de turno</button>
-  <button onclick="newGame()">🆕 Nueva partida</button>
-</section>
-
-
-<section class="panel">
-<h2>Tablero (Criaturas)</h2>
-  <div id="board" class="board"></div>
-</section>
-
-<section class="panel terrain-panel">
-  <h2>Terreno</h2>
-  <div id="terrainSlot"></div>
-</section>
-
-  <section class="panel">
-  <h2>Registro de acciones</h2>
-  <div id="log" class="log"></div>
-</section>
-
-
-<script type="module" src="app.js"></script>
-</body>
-</html>
-
-
-
 
 
 

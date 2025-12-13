@@ -271,14 +271,14 @@ window.togglePosition = i => {
 </button>
 
 
-            <div class="stat atk">
+<div class="stat atk ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
   ATK: ${s.card.atk}
   ${auto.atk ? ` (<span class="auto">+${auto.atk}</span>)` : ""}
   ${s.modAtk ? ` (<span class="manual">${s.modAtk > 0 ? "+" : ""}${s.modAtk}</span>)` : ""}
   → <strong>${s.card.atk + auto.atk + s.modAtk}</strong>
 </div>
 
-<div class="stat def">
+<div class="stat def ${s.position === "DEF" ? "active-stat" : "inactive-stat"}">
   DEF: ${s.card.def}
   ${auto.def ? ` (<span class="auto">+${auto.def}</span>)` : ""}
   ${s.modDef ? ` (<span class="manual">${s.modDef > 0 ? "+" : ""}${s.modDef}</span>)` : ""}
@@ -329,6 +329,7 @@ window.togglePosition = i => {
 
   render();
 });
+
 
 
 

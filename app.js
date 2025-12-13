@@ -7,21 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
   ========================== */
 
   let life = 40;
-
-  let maxMana = 3;
   let mana = 3;
-
-  let turn = 1;
-
-  const phases = [
-    "Inicio",
-    "Robo",
-    "Principal 1",
-    "Combate",
-    "Principal 2",
-    "Final"
-  ];
-  let phaseIndex = 0;
+  let maxMana = 3;
 
   /* =========================
      MESA (5 SLOTS)
@@ -31,33 +18,18 @@ document.addEventListener("DOMContentLoaded", () => {
     slot: i + 1,
     card: null,
     filter: "Todos",
-    position: "ataque",
-    summonedThisTurn: false,
-    hasAttacked: false,
-    positionChangedThisTurn: false
+    modAtk: 0,
+    modDef: 0
   }));
 
   let activeTerrain = null;
-
   const elements = ["Todos", ...new Set(CREATURES.map(c => c.element))];
 
   /* =========================
-     UTILIDADES
+     BONOS AUTOMÁTICOS
   ========================== */
 
-  function currentPhase() {
-    return phases[phaseIndex];
-  }
-
-  function isCombatPhase() {
-    return currentPhase() === "Combate";
-  }
-
-  /* =========================
-     BONOS (TERRENO + LEGENDARIOS)
-  ========================== */
-
-  function totalBonus(card) {
+  function autoBonus(card) {
     let atk = 0;
     let def = 0;
 
@@ -72,9 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // Legendarios en mesa
-    board.forEach(slot => {
-      const c = slot.card;
+    // Legendarios en campo
+    board.forEach(s => {
+      const c = s.card;
       if (c?.legendary && c.passiveBonus) {
         const a = c.passiveBonus.affects;
         if (
@@ -91,81 +63,66 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================
-     TURNOS Y FASES
-  ========================== */
-
-  window.nextPhase = () => {
-    phaseIndex++;
-
-    if (phaseIndex >= phases.length) {
-      phaseIndex = 0;
-      turn++;
-      startTurn();
-    }
-
-    render();
-  };
-
-  function startTurn() {
-    maxMana += 1;
-    mana = maxMana;
-
-    board.forEach(s => {
-      s.hasAttacked = false;
-      s.positionChangedThisTurn = false;
-      s.summonedThisTurn = false;
-    });
-  }
-
-  /* =========================
      ACCIONES GENERALES
   ========================== */
-
-  window.resetGame = () => {
-    life = 40;
-    maxMana = 3;
-    mana = 3;
-    turn = 1;
-    phaseIndex = 0;
-    activeTerrain = null;
-
-    board.forEach(s => {
-      s.card = null;
-      s.filter = "Todos";
-      s.position = "ataque";
-      s.summonedThisTurn = false;
-      s.hasAttacked = false;
-      s.positionChangedThisTurn = false;
-    });
-
-    render();
-  };
 
   window.changeLife = v => {
     life += v;
     render();
   };
 
-  window.useMana = cost => {
-    if (mana >= cost) {
-      mana -= cost;
+  window.addMana = v => {
+    mana += v;
+    if (mana > maxMana) mana = maxMana;
+    render();
+  };
+
+  window.useMana = v => {
+    if (mana >= v) {
+      mana -= v;
       render();
     }
   };
 
+  window.newTurn = () => {
+    maxMana += 1;
+    mana = maxMana;
+    render();
+  };
+
+  window.resetGame = () => {
+    life = 40;
+    mana = 3;
+    maxMana = 3;
+    activeTerrain = null;
+
+    board.forEach(s => {
+      s.card = null;
+      s.filter = "Todos";
+      s.modAtk = 0;
+      s.modDef = 0;
+    });
+
+    render();
+  };
+
   /* =========================
-     SELECCIÓN DE CARTAS
+     CARTAS Y TERRENO
   ========================== */
 
   window.setFilter = (i, value) => {
     board[i].filter = value;
     board[i].card = null;
+    board[i].modAtk = 0;
+    board[i].modDef = 0;
     render();
   };
 
   window.selectCard = (i, id) => {
     if (!id) {
       board[i].card = null;
+      board[i].modAtk = 0;
+      board[i].modDef = 0;
       render();
       return;
     }
@@ -174,10 +131,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!card) return;
 
     board[i].card = card;
-    board[i].summonedThisTurn = true;
-    board[i].hasAttacked = false;
-    board[i].position = "ataque";
-
+    board[i].modAtk = 0;
+    board[i].modDef = 0;
     render();
   };
 
@@ -187,43 +142,22 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* =========================
-     POSICIÓN DE BATALLA
+     MODIFICADORES MANUALES
   ========================== */
 
-  window.togglePosition = i => {
-    const slot = board[i];
-
-    if (!slot.card) return;
-    if (slot.summonedThisTurn) return;
-    if (slot.positionChangedThisTurn) return;
-    if (isCombatPhase()) return;
-
-    slot.position =
-      slot.position === "ataque" ? "defensa" : "ataque";
-
-    slot.positionChangedThisTurn = true;
+  window.modAtk = (i, v) => {
+    board[i].modAtk += v;
     render();
   };
 
-  /* =========================
-     COMBATE BÁSICO
-  ========================== */
+  window.modDef = (i, v) => {
+    board[i].modDef += v;
+    render();
+  };
 
-  window.attackPlayer = i => {
-    if (!isCombatPhase()) return;
-
-    const slot = board[i];
-    if (!slot.card) return;
-    if (slot.hasAttacked) return;
-    if (slot.summonedThisTurn) return;
-    if (slot.position !== "ataque") return;
-
-    const damage = slot.card.stars;
-    life -= damage;
-
-    slot.hasAttacked = true;
-
-    alert(`${slot.card.name} inflige ${damage} de daño directo`);
+  window.clearMods = i => {
+    board[i].modAtk = 0;
+    board[i].modDef = 0;
     render();
   };
 
@@ -234,18 +168,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function render() {
     document.getElementById("life").innerText = life;
     document.getElementById("currentMana").innerText = mana;
-    document.getElementById("turnNumber").innerText = turn;
-    document.getElementById("phaseName").innerText = currentPhase();
 
     const boardEl = document.getElementById("board");
     boardEl.innerHTML = "";
 
     board.forEach((slot, i) => {
-      const availableCards = CREATURES.filter(c =>
+      const list = CREATURES.filter(c =>
         slot.filter === "Todos" || c.element === slot.filter
       );
 
-      const bonus = slot.card ? totalBonus(slot.card) : { atk: 0, def: 0 };
+      const auto = slot.card ? autoBonus(slot.card) : { atk: 0, def: 0 };
 
       boardEl.innerHTML += `
         <div class="slot">
@@ -259,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <select onchange="selectCard(${i}, this.value)">
             <option value="">— Selecciona —</option>
-            ${availableCards.map(c =>
+            ${list.map(c =>
               `<option value="${c.id}" ${slot.card?.id === c.id ? "selected" : ""}>${c.name}</option>`
             ).join("")}
           </select>
@@ -270,31 +202,40 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
 
             <div class="stat">
-              Posición: ${slot.position.toUpperCase()}
-              <button onclick="togglePosition(${i})">Cambiar</button>
-            </div>
-
-            <div class="stat">
               ATK: ${slot.card.atk}
-              ${bonus.atk ? `<span class="bonus">+${bonus.atk} → (${slot.card.atk + bonus.atk})</span>` : ""}
+              <span class="bonus">
+                (${slot.card.atk + auto.atk + slot.modAtk})
+              </span>
             </div>
 
             <div class="stat">
               DEF: ${slot.card.def}
-              ${bonus.def ? `<span class="bonus">+${bonus.def} → (${slot.card.def + bonus.def})</span>` : ""}
+              <span class="bonus">
+                (${slot.card.def + auto.def + slot.modDef})
+              </span>
             </div>
 
-            <div class="stat">⭐ ${slot.card.stars}</div>
+            <div class="stat">
+              Mod ATK:
+              <button onclick="modAtk(${i}, 1)">+</button>
+              <button onclick="modAtk(${i}, -1)">−</button>
+              (${slot.modAtk})
+            </div>
+
+            <div class="stat">
+              Mod DEF:
+              <button onclick="modDef(${i}, 1)">+</button>
+              <button onclick="modDef(${i}, -1)">−</button>
+              (${slot.modDef})
+            </div>
+
+            <button onclick="clearMods(${i})">Limpiar modificadores</button>
 
             ${slot.card.legendary && slot.card.textEffect ? `
               <div class="effect-text">
                 <strong>Efecto legendario:</strong><br>
                 ${slot.card.textEffect}
               </div>
-            ` : ""}
-
-            ${isCombatPhase() ? `
-              <button onclick="attackPlayer(${i})">Atacar jugador</button>
             ` : ""}
           ` : ""}
         </div>

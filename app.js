@@ -22,6 +22,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const elements = ["Todos", ...new Set(CREATURES.map(c => c.element))];
 
   // ======================
+  // LOG DE ACCIONES
+  // ======================
+  const log = [];
+
+  function addLog(text) {
+    log.unshift(text);
+    if (log.length > 50) log.pop();
+  }
+
+  // ======================
   // BONOS AUTOMÁTICOS
   // ======================
   function autoBonus(card) {
@@ -62,28 +72,30 @@ document.addEventListener("DOMContentLoaded", () => {
   window.changeLife = v => {
     life += v;
     if (life < 0) life = 0;
+    addLog(`❤️ Vida ${v > 0 ? "➕" : "➖"}${Math.abs(v)} → ${life}`);
     render();
   };
 
   window.useMana = v => {
     if (mana >= v) {
       mana -= v;
+      addLog(`🔮 Usa ${v} maná → ${mana}/${maxMana}`);
       render();
     }
   };
 
-  // 👉 Maná actual SIN límite artificial
   window.addMana = v => {
     mana += v;
     if (mana < 0) mana = 0;
+    addLog(`🔮 Maná ${v > 0 ? "➕" : "➖"}${Math.abs(v)} → ${mana}/${maxMana}`);
     render();
   };
 
-  // 👉 Control explícito del máximo
   window.addMaxMana = v => {
     maxMana += v;
     if (maxMana < 0) maxMana = 0;
     if (mana > maxMana) mana = maxMana;
+    addLog(`🔷 Máx. maná ${v > 0 ? "➕" : "➖"}${Math.abs(v)} → ${maxMana}`);
     render();
   };
 
@@ -94,6 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
     life = 40;
     mana = 3;
     maxMana = 3;
+    log.length = 0;
 
     board.forEach(s => {
       s.card = null;
@@ -103,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     activeTerrain = null;
+    addLog("🔄 Nueva partida iniciada");
     render();
   };
 
@@ -114,29 +128,39 @@ document.addEventListener("DOMContentLoaded", () => {
     board[i].card = null;
     board[i].modAtk = 0;
     board[i].modDef = 0;
+    addLog(`📂 Criatura ${i + 1}: filtro → ${v}`);
     render();
   };
 
   window.selectCard = (i, id) => {
-    board[i].card = CREATURES.find(c => c.id === id) || null;
+    const card = CREATURES.find(c => c.id === id) || null;
+    board[i].card = card;
     board[i].modAtk = 0;
     board[i].modDef = 0;
+
+    if (card) {
+      addLog(`🧙 Invoca <strong>${card.name}</strong> en Criatura ${i + 1}`);
+    }
+
     render();
   };
 
   window.modAtk = (i, v) => {
     board[i].modAtk += v;
+    addLog(`⚔️ Criatura ${i + 1}: ATK ${v > 0 ? "➕" : "➖"}${Math.abs(v)}`);
     render();
   };
 
   window.modDef = (i, v) => {
     board[i].modDef += v;
+    addLog(`🛡️ Criatura ${i + 1}: DEF ${v > 0 ? "➕" : "➖"}${Math.abs(v)}`);
     render();
   };
 
   window.clearMods = i => {
     board[i].modAtk = 0;
     board[i].modDef = 0;
+    addLog(`🧹 Criatura ${i + 1}: modificadores limpiados`);
     render();
   };
 
@@ -145,6 +169,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // ======================
   window.selectTerrain = id => {
     activeTerrain = TERRAINS.find(t => t.id === id) || null;
+
+    if (activeTerrain) {
+      addLog(`🌍 Terreno activo: <strong>${activeTerrain.name}</strong>`);
+    } else {
+      addLog("🌍 Terreno removido");
+    }
+
     render();
   };
 
@@ -154,7 +185,11 @@ document.addEventListener("DOMContentLoaded", () => {
   function render() {
     document.getElementById("life").innerText = life;
     document.getElementById("currentMana").innerText = mana;
-    document.getElementById("maxMana").innerText = maxMana;
+
+    const maxManaEl = document.getElementById("maxMana");
+    if (maxManaEl) {
+      maxManaEl.innerText = maxMana;
+    }
 
     const boardEl = document.getElementById("board");
     boardEl.innerHTML = "";
@@ -238,6 +273,13 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="effect-text">${activeTerrain.textEffect}</div>
       ` : ""}
     `;
+
+    const logEl = document.getElementById("log");
+    if (logEl) {
+      logEl.innerHTML = log
+        .map(entry => `<div class="log-entry">• ${entry}</div>`)
+        .join("");
+    }
   }
 
   render();

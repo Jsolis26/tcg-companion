@@ -33,12 +33,9 @@ Al ser destruido, crea una Sombra 0/4
     class:"Sombra",
     stars:8, atk:36, def:38, mana:8,
     legendary:true,
-    textEffect:`
-Tus Sombras ganan +1 ATK.
-
+    textEffect:`Tus Sombras ganan +1 ATK.
 Una vez por turno, cuando una criatura Sombra vaya al Cementerio:
 Kael gana +1 ATK permanente.
-
 Una vez por turno, puedes revivir 1 criatura Sombra
 de hasta 4 estrellas pagando 2 maná.
 No puede atacar ese turno.
@@ -392,3 +389,4 @@ export const terrains = [
     textEffect:"Tus criaturas de Tierra ganan +2 DEF mientras esté activo. La primera vez que una criatura de Tierra fuese a recibir daño cada turno, reduce ese daño en 2."
   }
 ];
+

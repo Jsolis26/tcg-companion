@@ -3,15 +3,31 @@ import { creatures as CREATURES, terrains as TERRAINS } from "./cards.js";
 document.addEventListener("DOMContentLoaded", () => {
 
   // ======================
-  // ESTADO
+  // ESTADO GLOBAL
   // ======================
   let life = 40;
   let mana = 3;
+  let maxMana = 3;
+
+  let turn = 1;
+
+  const phases = [
+    "Inicio",
+    "Robo",
+    "Principal 1",
+    "Combate",
+    "Principal 2",
+    "Final"
+  ];
+  let phaseIndex = 0;
 
   const board = Array.from({ length: 5 }, (_, i) => ({
     slot: i + 1,
     card: null,
-    filter: "Todos"
+    filter: "Todos",
+    summonedThisTurn: false,
+    hasAttacked: false,
+    position: "ataque"
   }));
 
   let activeTerrain = null;
@@ -24,7 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let atk = 0;
     let def = 0;
 
-    // Terreno
     if (activeTerrain) {
       if (
         activeTerrain.affects.element === card.element ||
@@ -35,9 +50,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // Legendarios en mesa
-    board.forEach(slot => {
-      const c = slot.card;
+    board.forEach(s => {
+      const c = s.card;
       if (c?.legendary && c.passiveBonus) {
         const a = c.passiveBonus.affects;
         if (a.element === card.element || a.class === card.class) {
@@ -51,6 +65,48 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ======================
+  // FASES
+  // ======================
+  window.nextPhase = () => {
+    phaseIndex++;
+
+    if (phaseIndex >= phases.length) {
+      phaseIndex = 0;
+      turn++;
+      startTurn();
+    }
+
+    handlePhase();
+    render();
+  };
+
+  function startTurn() {
+    maxMana++;
+    mana = maxMana;
+
+    board.forEach(s => {
+      s.hasAttacked = false;
+      s.summonedThisTurn = false;
+    });
+  }
+
+  function handlePhase() {
+    const phase = phases[phaseIndex];
+
+    if (phase === "Inicio") {
+      // reservado para triggers futuros
+    }
+
+    if (phase === "Robo") {
+      // más adelante: robar carta
+    }
+
+    if (phase === "Final") {
+      // más adelante: descarte, efectos finales
+    }
+  }
+
+  // ======================
   // ACCIONES
   // ======================
   window.changeLife = v => { life += v; render(); };
@@ -59,12 +115,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.resetGame = () => {
     life = 40;
+    maxMana = 3;
     mana = 3;
+    turn = 1;
+    phaseIndex = 0;
     activeTerrain = null;
+
     board.forEach(s => {
       s.card = null;
       s.filter = "Todos";
+      s.hasAttacked = false;
+      s.summonedThisTurn = false;
+      s.position = "ataque";
     });
+
     render();
   };
 
@@ -76,6 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.selectCard = (i, id) => {
     board[i].card = CREATURES.find(c => c.id === id) || null;
+    board[i].summonedThisTurn = true;
     render();
   };
 
@@ -90,6 +155,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function render() {
     document.getElementById("life").innerText = life;
     document.getElementById("currentMana").innerText = mana;
+    document.getElementById("turnNumber").innerText = turn;
+    document.getElementById("phaseName").innerText = phases[phaseIndex];
 
     const boardEl = document.getElementById("board");
     boardEl.innerHTML = "";

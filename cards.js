@@ -19,9 +19,7 @@ export const creatures = [
     class:"Dragón",
     stars:7, atk:30, def:30, mana:7,
     legendary:true,
-    textEffect:`
-La primera vez por turno que sería destruido, no lo es.
-
+    textEffect:`La primera vez por turno que sería destruido, no lo es.
 Al ser destruido, crea una Sombra 0/4
 (+2 ATK si controlas a Kael).
 `
@@ -58,10 +56,8 @@ No puede atacar ese turno.
     class:"Dragón",
     stars:7, atk:30, def:30, mana:7,
     legendary:true,
-    textEffect:`
-Al atacar:
+    textEffect:`Al atacar:
 La criatura defensora pierde -2 DEF este turno.
-
 Si destruye una criatura, roba 1 carta.
 `
   },
@@ -74,7 +70,6 @@ Si destruye una criatura, roba 1 carta.
     legendary:true,
     textEffect:`
 Tus criaturas de Agua ganan +1 DEF.
-
 Durante tu turno,
 puedes cambiar una criatura a DEF.
 `,
@@ -96,12 +91,7 @@ puedes cambiar una criatura a DEF.
     class:"Bestia",
     stars:7, atk:32, def:28, mana:7,
     legendary:true,
-    textEffect:`
-Al atacar:
-Inflige 1 daño directo al rival.
-
-Si destruye una criatura,
-inflige 1 daño adicional.
+    textEffect:`Al atacar Inflige 1 daño directo al rival. Si destruye una criatura Inflige 1 daño adicional.
 `
   },
   {
@@ -389,4 +379,5 @@ export const terrains = [
     textEffect:"Tus criaturas de Tierra ganan +2 DEF mientras esté activo. La primera vez que una criatura de Tierra fuese a recibir daño cada turno, reduce ese daño en 2."
   }
 ];
+
 

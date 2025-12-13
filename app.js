@@ -81,8 +81,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         ${s.card?`
           <div class="stat ${s.card.legendary?"legendary":""}">${s.card.name}</div>
-          <div class="stat">ATK: ${s.card.atk} → ${s.card.atk+auto.atk+s.modAtk}</div>
-          <div class="stat">DEF: ${s.card.def} → ${s.card.def+auto.def+s.modDef}</div>
+<div class="stat">
+  ATK: ${s.card.atk}
+  ${auto.atk !== 0 ? ` (<span class="auto">+${auto.atk}</span>)` : ""}
+  ${s.modAtk !== 0 ? ` (<span class="manual">${s.modAtk > 0 ? "+" : ""}${s.modAtk}</span>)` : ""}
+  → <strong>${s.card.atk + auto.atk + s.modAtk}</strong>
+</div>
+
+<div class="stat">
+  DEF: ${s.card.def}
+  ${auto.def !== 0 ? ` (<span class="auto">+${auto.def}</span>)` : ""}
+  ${s.modDef !== 0 ? ` (<span class="manual">${s.modDef > 0 ? "+" : ""}${s.modDef}</span>)` : ""}
+  → <strong>${s.card.def + auto.def + s.modDef}</strong>
+</div>
+
 
           <div class="stat">
             Mod ATK:
@@ -115,3 +127,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   render();
 });
+

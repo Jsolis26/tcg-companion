@@ -221,3 +221,29 @@ button:active {
   border: 1px solid #6fcf97;
   color: #6fcf97;
 }
+
+/* =========================
+   POSICIÓN ATK / DEF
+   ========================= */
+
+.active-stat {
+  background: #1f2933;
+  border-left: 4px solid #22c55e;
+  padding: 6px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.inactive-stat {
+  opacity: 0.45;
+}
+
+/* Color distinto según tipo */
+.pos-atk {
+  color: #ef4444; /* rojo */
+}
+
+.pos-def {
+  color: #3b82f6; /* azul */
+}
+

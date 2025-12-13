@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Pasivos legendarios
-    board..forEach(s => {
+    board.forEach(s => {
       if (s.card?.legendary && s.card.passiveBonus) {
         const a = s.card.passiveBonus.affects;
         if (
@@ -329,6 +329,7 @@ window.togglePosition = i => {
 
   render();
 });
+
 
 
 

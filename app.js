@@ -252,11 +252,22 @@ window.togglePosition = i => {
 <div class="slot ${s.summonedThisTurn ? "summoned" : ""}">
           <div class="slot-title">Criatura ${s.slot}</div>
 
-          <select onchange="setFilter(${i}, this.value)">
-            ${elements.map(e =>
-              `<option ${s.filter === e ? "selected" : ""}>${e}</option>`
-            ).join("")}
-          </select>
+<div class="element-dropdown" data-slot="${i}">
+  <button class="element-selected" onclick="toggleElementDropdown(${i})">
+    <img src="icons/${s.filter === "Todos" ? "all" : s.filter.toLowerCase()}.svg">
+    <span>${s.filter}</span>
+  </button>
+
+  <div class="element-options" id="element-options-${i}">
+    ${elements.map(e => `
+      <div class="element-option"
+           onclick="selectElement(${i}, '${e}')">
+        <img src="icons/${e === "Todos" ? "all" : e.toLowerCase()}.svg">
+        <span>${e}</span>
+      </div>
+    `).join("")}
+  </div>
+</div>
 
           <select onchange="selectCard(${i}, this.value)">
             <option value="">— Selecciona —</option>
@@ -337,6 +348,7 @@ window.togglePosition = i => {
 
   render();
 });
+
 
 
 

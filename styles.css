@@ -46,3 +46,22 @@ body {
   color: #f2c94c; /* amarillo = ajuste manual */
 }
 
+.log {
+  background:#0b0b0b;
+  border:1px solid #333;
+  border-radius:8px;
+  padding:8px;
+  max-height:180px;
+  overflow-y:auto;
+  font-size:0.85em;
+}
+
+.log-entry {
+  margin-bottom:4px;
+  opacity:0.9;
+}
+
+.log-entry strong {
+  color:#6fcf97;
+}
+

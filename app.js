@@ -254,7 +254,9 @@ window.togglePosition = i => {
 
 <div class="element-dropdown" data-slot="${i}">
   <button class="element-selected" onclick="toggleElementDropdown(${i})">
-    <img src="icons/${s.filter === "Todos" ? "all" : s.filter.toLowerCase()}.svg">
+    <span class="el-icon">
+      ${getElementIcon(s.filter)}
+    </span>
     <span>${s.filter}</span>
   </button>
 
@@ -262,12 +264,13 @@ window.togglePosition = i => {
     ${elements.map(e => `
       <div class="element-option"
            onclick="selectElement(${i}, '${e}')">
-        <img src="icons/${e === "Todos" ? "all" : e.toLowerCase()}.svg">
+        <span class="el-icon">${getElementIcon(e)}</span>
         <span>${e}</span>
       </div>
     `).join("")}
   </div>
 </div>
+
 
           <select onchange="selectCard(${i}, this.value)">
             <option value="">— Selecciona —</option>
@@ -372,6 +375,21 @@ document.addEventListener("click", e => {
   }
 });
 
+
+function getElementIcon(el) {
+  switch (el) {
+    case "Agua": return "🌊";
+    case "Fuego": return "🔥";
+    case "Planta": return "🌱";
+    case "Electricidad": return "⚡";
+    case "Oscuridad": return "🌑";
+    case "Luz": return "✨";
+    case "Viento": return "🌪️";
+    case "Tierra": return "⛰️";
+    case "Todos":
+    default: return "⭕";
+  }
+}
 
 
 

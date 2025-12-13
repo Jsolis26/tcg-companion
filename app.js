@@ -3,7 +3,7 @@ import { creatures as CREATURES, terrains as TERRAINS } from "./cards.js";
 document.addEventListener("DOMContentLoaded", () => {
 
   // ======================
-  // ESTADO DEL JUGADOR
+  // ESTADO
   // ======================
   let life = 40;
   let mana = 3;
@@ -18,109 +18,110 @@ document.addEventListener("DOMContentLoaded", () => {
   const elements = ["Todos", ...new Set(CREATURES.map(c => c.element))];
 
   // ======================
-  // UI
+  // BONOS
   // ======================
-  function updateUI() {
-    document.getElementById("life").innerText = life;
-    document.getElementById("currentMana").innerText = mana;
+  function totalBonus(card) {
+    let atk = 0;
+    let def = 0;
+
+    // Terreno
+    if (activeTerrain) {
+      if (
+        activeTerrain.affects.element === card.element ||
+        activeTerrain.affects.class === card.class
+      ) {
+        atk += activeTerrain.bonus.atk;
+        def += activeTerrain.bonus.def;
+      }
+    }
+
+    // Legendarios en mesa
+    board.forEach(slot => {
+      const c = slot.card;
+      if (c?.legendary && c.passiveBonus) {
+        const a = c.passiveBonus.affects;
+        if (a.element === card.element || a.class === card.class) {
+          atk += c.passiveBonus.bonus.atk;
+          def += c.passiveBonus.bonus.def;
+        }
+      }
+    });
+
+    return { atk, def };
   }
 
   // ======================
-  // TERRENO
+  // ACCIONES
   // ======================
-  function terrainBonus(card) {
-    if (!activeTerrain || !card) return { atk:0, def:0 };
-    if (activeTerrain.affects.element === card.element) return activeTerrain.bonus;
-    if (activeTerrain.affects.class === card.class) return activeTerrain.bonus;
-    return { atk:0, def:0 };
-  }
-
-  // ======================
-  // ACCIONES JUGADOR
-  // ======================
-  window.changeLife = amount => {
-    life += amount;
-    updateUI();
-  };
-
-  window.useMana = amount => {
-    if (mana >= amount) mana -= amount;
-    updateUI();
-  };
-
-  window.addMana = amount => {
-    mana += amount;
-    updateUI();
-  };
+  window.changeLife = v => { life += v; render(); };
+  window.useMana = v => { if (mana >= v) mana -= v; render(); };
+  window.addMana = v => { mana += v; render(); };
 
   window.resetGame = () => {
     life = 40;
     mana = 3;
     activeTerrain = null;
-
-    board.forEach(slot => {
-      slot.card = null;
-      slot.filter = "Todos";
+    board.forEach(s => {
+      s.card = null;
+      s.filter = "Todos";
     });
-
-    renderBoard();
-    renderTerrain();
-    updateUI();
+    render();
   };
 
-  // ======================
-  // SELECCIONES
-  // ======================
   window.setFilter = (i, v) => {
     board[i].filter = v;
     board[i].card = null;
-    renderBoard();
+    render();
   };
 
   window.selectCard = (i, id) => {
     board[i].card = CREATURES.find(c => c.id === id) || null;
-    renderBoard();
+    render();
   };
 
   window.selectTerrain = id => {
     activeTerrain = TERRAINS.find(t => t.id === id) || null;
-    renderBoard();
-    renderTerrain();
+    render();
   };
 
   // ======================
   // RENDER
   // ======================
-  function renderBoard() {
-    const el = document.getElementById("board");
-    el.innerHTML = "";
+  function render() {
+    document.getElementById("life").innerText = life;
+    document.getElementById("currentMana").innerText = mana;
+
+    const boardEl = document.getElementById("board");
+    boardEl.innerHTML = "";
 
     board.forEach((slot, i) => {
       const list = CREATURES.filter(c =>
         slot.filter === "Todos" || c.element === slot.filter
       );
 
-      const bonus = slot.card ? terrainBonus(slot.card) : { atk:0, def:0 };
+      const bonus = slot.card ? totalBonus(slot.card) : { atk: 0, def: 0 };
 
-      el.innerHTML += `
+      boardEl.innerHTML += `
         <div class="slot">
           <div class="slot-title">Criatura ${slot.slot}</div>
 
           <select onchange="setFilter(${i}, this.value)">
             ${elements.map(e =>
-              `<option value="${e}" ${slot.filter===e?"selected":""}>${e}</option>`
+              `<option value="${e}" ${slot.filter === e ? "selected" : ""}>${e}</option>`
             ).join("")}
           </select>
 
           <select onchange="selectCard(${i}, this.value)">
             <option value="">— Selecciona —</option>
             ${list.map(c =>
-              `<option value="${c.id}" ${slot.card?.id===c.id?"selected":""}>${c.name}</option>`
+              `<option value="${c.id}" ${slot.card?.id === c.id ? "selected" : ""}>${c.name}</option>`
             ).join("")}
           </select>
 
           ${slot.card ? `
-            <div class="stat"><strong>${slot.card.name}</strong></div>
+            <div class="stat ${slot.card.legendary ? "legendary" : ""}">
+              ${slot.card.name}
+            </div>
 
             <div class="stat">
               ATK: ${slot.card.atk}
@@ -133,32 +134,35 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
 
             <div class="stat">⭐ ${slot.card.stars}</div>
+
+            ${slot.card.legendary && slot.card.textEffect ? `
+              <div class="effect-text">
+                <strong>Efecto legendario:</strong><br>
+                ${slot.card.textEffect}
+              </div>
+            ` : ""}
           ` : ""}
         </div>
       `;
     });
-  }
 
-  function renderTerrain() {
-    const el = document.getElementById("terrainSlot");
-    el.innerHTML = `
+    const terrainEl = document.getElementById("terrainSlot");
+    terrainEl.innerHTML = `
       <select onchange="selectTerrain(this.value)">
         <option value="">— Sin Terreno —</option>
         ${TERRAINS.map(t =>
-          `<option value="${t.id}" ${activeTerrain?.id===t.id?"selected":""}>${t.name}</option>`
+          `<option value="${t.id}" ${activeTerrain?.id === t.id ? "selected" : ""}>${t.name}</option>`
         ).join("")}
       </select>
 
       ${activeTerrain ? `
         <div class="effect-text">
-          <div class="terrain-name">${activeTerrain.name}</div>
+          <strong>${activeTerrain.name}</strong><br>
           ${activeTerrain.textEffect}
         </div>
       ` : ""}
     `;
   }
 
-  renderBoard();
-  renderTerrain();
-  updateUI();
+  render();
 });

@@ -12,36 +12,28 @@ export const creatures = [
   { id:"chaman_sombras", name:"Chamán de las Sombras", element:"Oscuridad", stars:5, atk:19, def:20, mana:5, class:"Mago" },
   { id:"senor_espectral", name:"Señor Espectral", element:"Oscuridad", stars:6, atk:24, def:25, mana:6, class:"Sombra" },
 
- {
-  id: "dragon-noche-eterna",
-  name: "Dragón de la Noche Eterna",
-  type: "Criatura",
-  element: "Oscuridad",
-  class: "Dragón",
-  stars: 7,
-  atk: 30,
-  def: 30,
-  mana: 7,
-  legendary: true,
-  textEffect: `
+  {
+    id:"dragon-noche-eterna",
+    name:"Dragón de la Noche Eterna",
+    element:"Oscuridad",
+    class:"Dragón",
+    stars:7, atk:30, def:30, mana:7,
+    legendary:true,
+    textEffect:`
 La primera vez por turno que sería destruido, no lo es.
 
 Al ser destruido, crea una Sombra 0/4
 (+2 ATK si controlas a Kael).
 `
-},
+  },
   {
-  id: "kael-senor-sombras",
-  name: "Kael, Señor de las Sombras",
-  type: "Criatura",
-  element: "Oscuridad",
-  class: "Sombra",
-  stars: 8,
-  atk: 36,
-  def: 38,
-  mana: 8,
-  legendary: true,
-  textEffect: `
+    id:"kael-senor-sombras",
+    name:"Kael, Señor de las Sombras",
+    element:"Oscuridad",
+    class:"Sombra",
+    stars:8, atk:36, def:38, mana:8,
+    legendary:true,
+    textEffect:`
 Tus Sombras ganan +1 ATK.
 
 Una vez por turno, cuando una criatura Sombra vaya al Cementerio:
@@ -51,12 +43,8 @@ Una vez por turno, puedes revivir 1 criatura Sombra
 de hasta 4 estrellas pagando 2 maná.
 No puede atacar ese turno.
 `,
-  passiveBonus: {
-    affects: { class: "Sombra" },
-    bonus: { atk: 1, def: 0 }
-  }
-}
-,
+    passiveBonus:{ affects:{ class:"Sombra" }, bonus:{ atk:1, def:0 } }
+  },
 
   // ================= AGUA =================
   { id:"naiade_curiosa", name:"Naiade Curiosa", element:"Agua", stars:1, atk:5, def:5, mana:1, class:"Bestia" },
@@ -67,45 +55,34 @@ No puede atacar ese turno.
   { id:"tortuga_abisal", name:"Tortuga Abisal", element:"Agua", stars:6, atk:23, def:26, mana:6, class:"Bestia" },
 
   {
-  id: "leviatan-horizonte",
-  name: "Leviatán del Horizonte",
-  type: "Criatura",
-  element: "Agua",
-  class: "Dragón",
-  stars: 7,
-  atk: 30,
-  def: 30,
-  mana: 7,
-  legendary: true,
-  textEffect: `
+    id:"leviatan-horizonte",
+    name:"Leviatán del Horizonte",
+    element:"Agua",
+    class:"Dragón",
+    stars:7, atk:30, def:30, mana:7,
+    legendary:true,
+    textEffect:`
 Al atacar:
 La criatura defensora pierde -2 DEF este turno.
 
 Si destruye una criatura, roba 1 carta.
 `
-},
+  },
   {
-  id: "aqualis-reina-profundidades",
-  name: "Aqualis, Reina de las Profundidades",
-  type: "Criatura",
-  element: "Agua",
-  class: "Mago",
-  stars: 8,
-  atk: 35,
-  def: 37,
-  mana: 8,
-  legendary: true,
-  textEffect: `
+    id:"aqualis-reina-profundidades",
+    name:"Aqualis, Reina de las Profundidades",
+    element:"Agua",
+    class:"Mago",
+    stars:8, atk:35, def:37, mana:8,
+    legendary:true,
+    textEffect:`
 Tus criaturas de Agua ganan +1 DEF.
 
 Durante tu turno,
 puedes cambiar una criatura a DEF.
 `,
-  passiveBonus: {
-    affects: { element: "Agua" },
-    bonus: { atk: 0, def: 1 }
-  }
-},
+    passiveBonus:{ affects:{ element:"Agua" }, bonus:{ atk:0, def:1 } }
+  },
 
   // ================= FUEGO =================
   { id:"salamandra_ignea", name:"Salamandra Ígnea", element:"Fuego", stars:1, atk:6, def:4, mana:1, class:"Bestia" },
@@ -116,47 +93,36 @@ puedes cambiar una criatura a DEF.
   { id:"dragon_carmesi", name:"Dragón Carmesí", element:"Fuego", stars:6, atk:26, def:22, mana:6, class:"Dragón" },
 
   {
-  id: "titan-solar",
-  name: "Titán Solar",
-  type: "Criatura",
-  element: "Fuego",
-  class: "Bestia",
-  stars: 7,
-  atk: 32,
-  def: 28,
-  mana: 7,
-  legendary: true,
-  textEffect: `
+    id:"titan-solar",
+    name:"Titán Solar",
+    element:"Fuego",
+    class:"Bestia",
+    stars:7, atk:32, def:28, mana:7,
+    legendary:true,
+    textEffect:`
 Al atacar:
 Inflige 1 daño directo al rival.
 
 Si destruye una criatura,
 inflige 1 daño adicional.
 `
-},
+  },
   {
-  id: "ignis-llamas-eternas",
-  name: "Ignis, Señor de las Llamas Eternas",
-  type: "Criatura",
-  element: "Fuego",
-  class: "Mago",
-  stars: 8,
-  atk: 38,
-  def: 34,
-  mana: 8,
-  legendary: true,
-  textEffect: `
+    id:"ignis-llamas-eternas",
+    name:"Ignis, Señor de las Llamas Eternas",
+    element:"Fuego",
+    class:"Mago",
+    stars:8, atk:38, def:34, mana:8,
+    legendary:true,
+    textEffect:`
 Tus criaturas de Fuego ganan +1 ATK.
 
 Una vez por turno:
 Si una criatura enemiga fue destruida,
 inflige 2 de daño al rival.
 `,
-  passiveBonus: {
-    affects: { element: "Fuego" },
-    bonus: { atk: 1, def: 0 }
-  }
-},
+    passiveBonus:{ affects:{ element:"Fuego" }, bonus:{ atk:1, def:0 } }
+  },
 
   // ================= LUZ =================
   { id:"aprendiz_radiante", name:"Aprendiz Radiante", element:"Luz", stars:1, atk:4, def:6, mana:1, class:"Guerrero" },
@@ -167,17 +133,13 @@ inflige 2 de daño al rival.
   { id:"centinela_radiante", name:"Centinela Radiante", element:"Luz", stars:6, atk:23, def:26, mana:6, class:"Eterno" },
 
   {
-  id: "heraldo-amanecer",
-  name: "Heraldo del Amanecer",
-  type: "Criatura",
-  element: "Luz",
-  class: "Eterno",
-  stars: 7,
-  atk: 29,
-  def: 32,
-  mana: 7,
-  legendary: true,
-  textEffect: `
+    id:"heraldo-amanecer",
+    name:"Heraldo del Amanecer",
+    element:"Luz",
+    class:"Eterno",
+    stars:7, atk:29, def:32, mana:7,
+    legendary:true,
+    textEffect:`
 Al entrar:
 Una criatura propia gana +3 DEF permanente.
 
@@ -185,238 +147,24 @@ La primera vez por turno
 que una criatura propia sería destruida,
 no lo es.
 `
-},
+  },
   {
-  id: "solarius-emperador-radiante",
-  name: "Solarius, Emperador Radiante",
-  type: "Criatura",
-  element: "Luz",
-  class: "Eterno",
-  stars: 8,
-  atk: 34,
-  def: 38,
-  mana: 8,
-  legendary: true,
-  textEffect: `
+    id:"solarius-emperador-radiante",
+    name:"Solarius, Emperador Radiante",
+    element:"Luz",
+    class:"Eterno",
+    stars:8, atk:34, def:38, mana:8,
+    legendary:true,
+    textEffect:`
 Tus criaturas de Luz ganan +1 DEF.
 
 Una vez por turno,
 cuando recibas daño directo,
 reduce ese daño en 1.
 `,
-  passiveBonus: {
-    affects: { element: "Luz" },
-    bonus: { atk: 0, def: 1 }
+    passiveBonus:{ affects:{ element:"Luz" }, bonus:{ atk:0, def:1 } }
   }
-},
 
-  // ================= VIENTO =================
-  { id:"espiritu_errante_viento", name:"Espíritu Errante", element:"Viento", stars:1, atk:6, def:4, mana:1, class:"Espíritu" },
-  { id:"halcon_cumbres", name:"Halcón de las Cumbres", element:"Viento", stars:2, atk:9, def:7, mana:2, class:"Bestia" },
-  { id:"jinete_viento", name:"Jinete del Viento", element:"Viento", stars:3, atk:12, def:10, mana:3, class:"Guerrero" },
-  { id:"espiritu_tormenta", name:"Espíritu de Tormenta", element:"Viento", stars:4, atk:16, def:13, mana:4, class:"Espíritu" },
-  { id:"maga_aeromante", name:"Maga Aeromante", element:"Viento", stars:5, atk:20, def:17, mana:5, class:"Mago" },
-  { id:"dragon_celeste", name:"Dragón Celeste", element:"Viento", stars:6, atk:25, def:22, mana:6, class:"Dragón" },
-
-  {
-  id: "tempestia-reina-aire",
-  name: "Tempestia, Reina del Aire",
-  type: "Criatura",
-  element: "Viento",
-  class: "Espíritu",
-  stars: 7,
-  atk: 31,
-  def: 28,
-  mana: 7,
-  legendary: true,
-  textEffect: `
-Al entrar:
-Devuelve 1 criatura enemiga a la mano.
-
-Una vez por turno:
-Una criatura enemiga no puede atacar
-durante su próximo turno.
-`
-},
-  {
-  id: "zephyrus-senor-cielo",
-  name: "Zephyrus, Señor del Cielo",
-  type: "Criatura",
-  element: "Viento",
-  class: "Mago",
-  stars: 8,
-  atk: 37,
-  def: 33,
-  mana: 8,
-  legendary: true,
-  textEffect: `
-Tus criaturas de Viento ganan +1 ATK.
-
-Una vez por turno:
-Roba 1 carta y descarta 1 carta.
-`,
-  passiveBonus: {
-    affects: { element: "Viento" },
-    bonus: { atk: 1, def: 0 }
-  }
-},
-
-  // ================= ELECTRICIDAD =================
-  { id:"pulso_erratico", name:"Pulso Errático", element:"Electricidad", stars:1, atk:6, def:4, mana:1, class:"Electricidad" },
-  { id:"serpiente_voltaica", name:"Serpiente Voltaica", element:"Electricidad", stars:2, atk:9, def:7, mana:2, class:"Electricidad" },
-  { id:"guerrero_electro", name:"Guerrero Electromagnético", element:"Electricidad", stars:3, atk:12, def:10, mana:3, class:"Electricidad" },
-  { id:"aguila_relampago", name:"Águila Relámpago", element:"Electricidad", stars:4, atk:16, def:13, mana:4, class:"Electricidad" },
-  { id:"golem_plasma", name:"Gólem de Plasma", element:"Electricidad", stars:5, atk:21, def:17, mana:5, class:"Electricidad" },
-  { id:"titan_trueno", name:"Titán de Trueno", element:"Electricidad", stars:6, atk:26, def:22, mana:6, class:"Electricidad" },
-
-  {
-  id: "dragon-tempestad",
-  name: "Dragón Tempestad",
-  type: "Criatura",
-  element: "Electricidad",
-  class: "Electricidad",
-  stars: 7,
-  atk: 32,
-  def: 28,
-  mana: 7,
-  legendary: true,
-  textEffect: `
-Al atacar:
-Inflige 1 daño directo al rival.
-
-Si destruye una criatura,
-ese daño es 2.
-`
-},
-  {
-  id: "coloso-electrico",
-  name: "Coloso Eléctrico",
-  type: "Criatura",
-  element: "Electricidad",
-  class: "Electricidad",
-  stars: 8,
-  atk: 38,
-  def: 33,
-  mana: 8,
-  legendary: true,
-  textEffect: `
-Tus criaturas de Electricidad ganan +1 ATK.
-
-Una vez por turno:
-Cuando inflijas daño directo,
-inflige +1 adicional.
-`,
-  passiveBonus: {
-    affects: { element: "Electricidad" },
-    bonus: { atk: 1, def: 0 }
-  }
-},
-
-  // ================= PLANTA =================
-  { id:"semilla_errante", name:"Semilla Errante", element:"Planta", stars:1, atk:4, def:6, mana:1, class:"Planta" },
-  { id:"brote_guardian", name:"Brote Guardián", element:"Planta", stars:2, atk:7, def:9, mana:2, class:"Planta" },
-  { id:"guerrero_espinas", name:"Guerrero de Espinas", element:"Planta", stars:3, atk:10, def:12, mana:3, class:"Guerrero" },
-  { id:"arbol_ancestral", name:"Árbol Ancestral", element:"Planta", stars:4, atk:14, def:17, mana:4, class:"Planta" },
-  { id:"druida_verde", name:"Druida Verde", element:"Planta", stars:5, atk:18, def:22, mana:5, class:"Mago" },
-  { id:"ent_colosal", name:"Ent Colosal", element:"Planta", stars:6, atk:22, def:27, mana:6, class:"Bestia" },
-
-  {
-  id: "reina-flores",
-  name: "Reina de las Flores",
-  type: "Criatura",
-  element: "Planta",
-  class: "Planta",
-  stars: 7,
-  atk: 28,
-  def: 33,
-  mana: 7,
-  legendary: true,
-  textEffect: `
-Al entrar:
-Cura 2 puntos de vida.
-
-Tus criaturas de Planta ganan +1 DEF.
-`,
-  passiveBonus: {
-    affects: { element: "Planta" },
-    bonus: { atk: 0, def: 1 }
-  }
-},
-  {
-  id: "coloso-raices",
-  name: "Coloso de Raíces",
-  type: "Criatura",
-  element: "Planta",
-  class: "Planta",
-  stars: 8,
-  atk: 33,
-  def: 39,
-  mana: 8,
-  legendary: true,
-  textEffect: `
-Una vez por turno,
-cuando recibas daño directo,
-reduce ese daño en 2.
-
-Una vez por turno,
-la primera vez que una criatura de Planta
-sería destruida,
-pierde -2 DEF en su lugar.
-`
-},
-
-  // ================= TIERRA =================
-  { id:"golem_roca", name:"Gólem de Roca Menor", element:"Tierra", stars:1, atk:4, def:6, mana:1, class:"Bestia" },
-  { id:"armadillo_valle", name:"Armadillo del Valle", element:"Tierra", stars:2, atk:7, def:9, mana:2, class:"Bestia" },
-  { id:"guerrero_granito", name:"Guerrero de Granito", element:"Tierra", stars:3, atk:10, def:13, mana:3, class:"Guerrero" },
-  { id:"guardian_canon", name:"Guardián del Cañón", element:"Tierra", stars:4, atk:14, def:18, mana:4, class:"Guerrero" },
-  { id:"druida_tierra", name:"Druida de la Tierra", element:"Tierra", stars:5, atk:18, def:23, mana:5, class:"Mago" },
-  { id:"coloso_montana", name:"Coloso de Montaña", element:"Tierra", stars:6, atk:22, def:28, mana:6, class:"Bestia" },
-
-  {
-  id: "titan-cordillera",
-  name: "Titán de la Cordillera",
-  type: "Criatura",
-  element: "Tierra",
-  class: "Bestia",
-  stars: 7,
-  atk: 27,
-  def: 34,
-  mana: 7,
-  legendary: true,
-  textEffect: `
-Al entrar:
-Una criatura propia gana +4 DEF permanente.
-
-Mientras esté en el campo,
-tus criaturas no pueden perder DEF
-por efectos del rival.
-`
-},
-  {
-  id: "gaia-madre-tierra",
-  name: "Gaia, Madre de la Tierra",
-  type: "Criatura",
-  element: "Tierra",
-  class: "Mago",
-  stars: 8,
-  atk: 32,
-  def: 40,
-  mana: 8,
-  legendary: true,
-  textEffect: `
-Tus criaturas de Tierra ganan +1 DEF.
-
-Una vez por turno,
-la primera vez que una criatura propia
-sería destruida,
-no lo es.
-`,
-  passiveBonus: {
-    affects: { element: "Tierra" },
-    bonus: { atk: 0, def: 1 }
-  }
-}
 ];
 
 // ===================================================
@@ -481,4 +229,5 @@ export const terrains = [
     textEffect:"Tus criaturas de Tierra ganan +2 DEF mientras esté activo. La primera vez que una criatura de Tierra fuese a recibir daño cada turno, reduce ese daño en 2."
   }
 ];
+
 

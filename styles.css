@@ -65,3 +65,16 @@ body {
   color:#6fcf97;
 }
 
+.row-inline {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap; /* 🔥 importante para móvil */
+}
+
+.inline-block {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+

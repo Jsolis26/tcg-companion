@@ -231,12 +231,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <button onclick="clearMods(${i})">Limpiar modificadores</button>
 
-            ${slot.card.legendary && slot.card.textEffect ? `
-              <div class="effect-text">
-                <strong>Efecto legendario:</strong><br>
-                ${slot.card.textEffect}
-              </div>
-            ` : ""}
+${slot.card.legendary && slot.card.textEffect ? `
+  <div class="effect-text">
+    <strong>Efecto legendario:</strong><br>
+    ${slot.card.textEffect}
+
+    ${slot.card.passiveBonus ? `
+      <div class="auto-note">
+        <strong>Bono pasivo activo:</strong>
+        ${slot.card.passiveBonus.bonus.atk ? ` +${slot.card.passiveBonus.bonus.atk} ATK` : ""}
+        ${slot.card.passiveBonus.bonus.def ? ` +${slot.card.passiveBonus.bonus.def} DEF` : ""}
+        <br><em>(se aplica automáticamente mientras esté en el campo)</em>
+      </div>
+    ` : ""}
+  </div>
+` : ""}
           ` : ""}
         </div>
       `;
@@ -262,3 +271,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   render();
 });
+

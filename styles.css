@@ -1,80 +1,165 @@
+/* ===== RESET BÁSICO ===== */
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
-  background:#111;
-  color:#eee;
-  margin:0;
-  padding:10px;
+  background: #0f0f0f;
+  color: #eee;
+  margin: 0;
+  padding: 10px;
+}
+
+/* ===== HEADER ===== */
+.header {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.6em;
+  letter-spacing: 1px;
+}
+
+/* ===== PANELES ===== */
+.panel {
+  background: linear-gradient(180deg, #1a1a1a, #121212);
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.panel h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+}
+
+/* ===== VIDA Y MANÁ ===== */
+.status-row {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.status-block {
+  flex: 1;
+  background: #0b0b0b;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 8px;
+  text-align: center;
+}
+
+.status-block strong {
+  font-size: 1.2em;
+}
+
+.life {
+  color: #ff6b6b;
+}
+
+.mana {
+  color: #6f8cff;
+}
+
+.buttons {
+  margin-top: 6px;
+}
+
+.buttons button {
+  margin: 0 4px;
+}
+
+/* ===== BOTONES ===== */
+button {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: #eee;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #3a3a3a;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+.buttons-row {
+  display: flex;
+  gap: 10px;
+}
+
+/* ===== TABLERO ===== */
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .slot {
-  background:#1c1c1c;
-  border:1px solid #333;
-  border-radius:8px;
-  padding:10px;
-  margin-bottom:10px;
+  background: linear-gradient(180deg, #1e1e1e, #141414);
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 10px;
 }
 
 .slot-title {
-  font-weight:bold;
-  margin-bottom:6px;
+  text-transform: uppercase;
+  font-size: 0.75em;
+  letter-spacing: 1px;
+  color: #aaa;
+  margin-bottom: 6px;
 }
 
 .stat {
-  margin:4px 0;
+  margin: 4px 0;
 }
 
+/* ===== EFECTOS ===== */
 .legendary {
-  color:#ffd700;
-  font-weight:bold;
+  color: #ffd700;
+  font-weight: bold;
 }
 
 .effect-text {
-  margin-top:8px;
-  font-size:0.9em;
-  background:#000;
-  padding:6px;
-  border-left:3px solid #666;
-
-  /* 🔥 ESTA ES LA LÍNEA IMPORTANTE 🔥 */
+  margin-top: 8px;
+  font-size: 0.9em;
+  background: #000;
+  padding: 6px;
+  border-left: 3px solid #666;
   white-space: pre-line;
 }
+
 .auto {
-  color: #6fcf97; /* verde = efectos */
+  color: #6fcf97;
 }
 
 .manual {
-  color: #f2c94c; /* amarillo = ajuste manual */
+  color: #f2c94c;
 }
 
+/* ===== LOG ===== */
 .log {
-  background:#0b0b0b;
-  border:1px solid #333;
-  border-radius:8px;
-  padding:8px;
-  max-height:180px;
-  overflow-y:auto;
-  font-size:0.85em;
+  max-height: 180px;
+  overflow-y: auto;
+  background: #0b0b0b;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 0.9em;
 }
 
-.log-entry {
-  margin-bottom:4px;
-  opacity:0.9;
+.log div {
+  margin-bottom: 4px;
+  border-bottom: 1px dashed #222;
+  padding-bottom: 4px;
 }
-
-.log-entry strong {
-  color:#6fcf97;
-}
-
-.row-inline {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap; /* 🔥 importante para móvil */
-}
-
-.inline-block {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-

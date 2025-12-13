@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     filter: "Todos",
     modAtk: 0,
     modDef: 0,
-    position: "ATK" // ATK | DEF
+    position: "ATK", // ATK | DEF
     summonedThisTurn: false
   }));
 
@@ -337,6 +337,7 @@ window.togglePosition = i => {
 
   render();
 });
+
 
 
 

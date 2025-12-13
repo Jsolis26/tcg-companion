@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     card: null,
     filter: "Todos",
     modAtk: 0,
-    modDef: 0
+    modDef: 0,
     position: "ATK" // ATK | DEF
   }));
 
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Pasivos legendarios
-    .forEach(s => {
+    board..forEach(s => {
       if (s.card?.legendary && s.card.passiveBonus) {
         const a = s.card.passiveBonus.affects;
         if (
@@ -139,11 +139,12 @@ document.addEventListener("DOMContentLoaded", () => {
     maxMana = 3;
     log.length = 0;
 
-    .forEach(s => {
+    board.forEach(s => {
       s.card = null;
       s.filter = "Todos";
       s.modAtk = 0;
       s.modDef = 0;
+      s.position = "ATK";
     });
 
     activeTerrain = null;
@@ -155,13 +156,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // TABLERO (CRIATURAS)
   // ======================
   window.setFilter = (i, v) => {
-    [i].filter = v;
-    [i].card = null;
-    board[i].modAtk = 0;
-    board[i].modDef = 0;
-    addLog(`📂 Criatura ${i + 1}: filtro → ${v}`);
-    render();
-  };
+  board[i].filter = v;
+  board[i].card = null;
+  board[i].modAtk = 0;
+  board[i].modDef = 0;
+  board[i].position = "ATK";
+  addLog(`📂 Criatura ${i + 1}: filtro → ${v}`);
+  render();
+};
 
   window.selectCard = (i, id) => {
     const card = CREATURES.find(c => c.id === id) || null;
@@ -327,5 +329,6 @@ window.togglePosition = i => {
 
   render();
 });
+
 
 

@@ -1,3 +1,15 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Crónicas TCG</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<h1>Crónicas TCG</h1>
+
 <section class="panel">
   <h2>Jugador</h2>
 
@@ -23,6 +35,45 @@
 
   </div>
 </section>
+
+
+<section class="panel">
+  <h2>Partida</h2>
+  <button onclick="endTurn()">🔄 Fin de turno</button>
+  <button onclick="newGame()">🆕 Nueva partida</button>
+</section>
+
+
+<section class="panel">
+<h2>Tablero (Criaturas)</h2>
+  <div id="board" class="board"></div>
+</section>
+
+<section class="panel terrain-panel">
+  <h2>Terreno</h2>
+  <div id="terrainSlot"></div>
+</section>
+
+  <section class="panel">
+  <h2>Registro de acciones</h2>
+  <div id="log" class="log"></div>
+</section>
+
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
 
 
 

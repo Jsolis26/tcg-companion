@@ -38,3 +38,11 @@ body {
   /* 🔥 ESTA ES LA LÍNEA IMPORTANTE 🔥 */
   white-space: pre-line;
 }
+.auto {
+  color: #6fcf97; /* verde = efectos */
+}
+
+.manual {
+  color: #f2c94c; /* amarillo = ajuste manual */
+}
+

@@ -8,44 +8,46 @@
 </head>
 <body>
 
-<h1>Crónicas TCG</h1>
+<header class="header">
+  <h1>Crónicas TCG</h1>
+</header>
 
 <section class="panel">
   <h2>Jugador</h2>
 
-  <div class="row-inline">
-
-    <!-- Vida -->
-    <div class="inline-block">
-      <div class="stat">❤️ Vida: <strong id="life">40</strong></div>
-      <button onclick="changeLife(-1)">−</button>
-      <button onclick="changeLife(1)">+</button>
-    </div>
-
-    <!-- Maná -->
-    <div class="inline-block">
-      <div class="stat">
-        🔮 Maná:
-        <strong id="currentMana">3</strong> /
-        <strong id="maxMana">3</strong>
+  <!-- VIDA Y MANÁ EN LA MISMA LÍNEA -->
+  <div class="status-row">
+    <div class="status-block life">
+      ❤️ Vida:
+      <strong id="life">40</strong>
+      <div class="buttons">
+        <button onclick="changeLife(-1)">−</button>
+        <button onclick="changeLife(1)">+</button>
       </div>
-      <button onclick="useMana(1)">−</button>
-      <button onclick="addMana(1)">+</button>
     </div>
 
+    <div class="status-block mana">
+      🔮 Maná:
+      <strong id="currentMana">3</strong> /
+      <strong id="maxMana">3</strong>
+      <div class="buttons">
+        <button onclick="useMana(1)">−</button>
+        <button onclick="addMana(1)">+</button>
+      </div>
+    </div>
   </div>
 </section>
 
-
 <section class="panel">
   <h2>Partida</h2>
-  <button onclick="endTurn()">🔄 Fin de turno</button>
-  <button onclick="newGame()">🆕 Nueva partida</button>
+  <div class="buttons-row">
+    <button onclick="endTurn()">🔄 Fin de turno</button>
+    <button onclick="newGame()">🆕 Nueva partida</button>
+  </div>
 </section>
 
-
 <section class="panel">
-<h2>Tablero (Criaturas)</h2>
+  <h2>Tablero (Criaturas)</h2>
   <div id="board" class="board"></div>
 </section>
 
@@ -54,29 +56,11 @@
   <div id="terrainSlot"></div>
 </section>
 
-  <section class="panel">
+<section class="panel">
   <h2>Registro de acciones</h2>
   <div id="log" class="log"></div>
 </section>
 
-
 <script type="module" src="app.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

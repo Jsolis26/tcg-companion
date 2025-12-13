@@ -1,78 +1,40 @@
 body {
   font-family: Arial, sans-serif;
-  background: #121212;
-  color: #ffffff;
-  padding: 12px;
-  margin: 0;
-}
-
-h1 {
-  text-align: center;
-  font-size: 20px;
-  margin-bottom: 12px;
-}
-
-.panel {
-  background: #1e1e1e;
-  padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-}
-
-.terrain-panel {
-  border: 2px dashed #555;
-}
-
-.board {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
+  background:#111;
+  color:#eee;
+  margin:0;
+  padding:10px;
 }
 
 .slot {
-  background: #181818;
-  border-radius: 6px;
-  padding: 8px;
+  background:#1c1c1c;
+  border:1px solid #333;
+  border-radius:8px;
+  padding:10px;
+  margin-bottom:10px;
 }
 
 .slot-title {
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 6px;
+  font-weight:bold;
+  margin-bottom:6px;
 }
 
 .stat {
-  font-size: 14px;
-  margin: 4px 0;
-}
-
-.bonus {
-  color: #6ddf6d;
-  font-size: 12px;
-  margin-left: 6px;
+  margin:4px 0;
 }
 
 .legendary {
-  color: gold;
-  font-weight: bold;
-}
-
-select, button {
-  width: 100%;
-  padding: 6px;
-  margin-bottom: 6px;
-  font-size: 14px;
+  color:#ffd700;
+  font-weight:bold;
 }
 
 .effect-text {
-  font-size: 13px;
-  color: #ddd;
-  margin-top: 6px;
-  line-height: 1.4;
-}
+  margin-top:8px;
+  font-size:0.9em;
+  background:#000;
+  padding:6px;
+  border-left:3px solid #666;
 
-@media (min-width: 600px) {
-  .board {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  /* 🔥 ESTA ES LA LÍNEA IMPORTANTE 🔥 */
+  white-space: pre-line;
 }

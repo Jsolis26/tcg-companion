@@ -2,17 +2,13 @@ import { creatures as CREATURES, terrains as TERRAINS } from "./cards.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ======================
-  // CONFIGURACIÓN GENERAL
-  // ======================
   const MAX_MANA_LIMIT = 8;
 
-  // ======================
-  // ESTADO DE PARTIDA
-  // ======================
   let life = 40;
   let mana = 3;
   let maxMana = 3;
+
+  let activeTerrain = null;
 
   const board = Array.from({ length: 5 }, (_, i) => ({
     slot: i + 1,
@@ -24,21 +20,14 @@ document.addEventListener("DOMContentLoaded", () => {
     summonedThisTurn: false
   }));
 
-  let activeTerrain = null;
   const elements = ["Todos", ...new Set(CREATURES.map(c => c.element))];
 
-  // ======================
-  // LOG
-  // ======================
   const log = [];
-  function addLog(text) {
-    log.unshift(text);
+  const addLog = txt => {
+    log.unshift(txt);
     if (log.length > 50) log.pop();
-  }
+  };
 
-  // ======================
-  // ICONOS
-  // ======================
   function getElementIcon(el) {
     switch (el) {
       case "Agua": return "🌊";
@@ -83,33 +72,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ======================
-  // CONTROLES DE PARTIDA
+  // CONTROLES
   // ======================
   window.changeLife = v => {
     life = Math.max(0, life + v);
-    addLog(`❤️ Vida ${v > 0 ? "➕" : "➖"}${Math.abs(v)} → ${life}`);
     render();
   };
 
   window.useMana = v => {
-    if (mana >= v) {
-      mana -= v;
-      addLog(`🔮 Usa ${v} maná → ${mana}/${maxMana}`);
-      render();
-    }
+    if (mana >= v) mana -= v;
+    render();
   };
 
   window.addMana = v => {
     mana = Math.min(maxMana, Math.max(0, mana + v));
-    addLog(`🔮 Maná ${v > 0 ? "➕" : "➖"}${Math.abs(v)} → ${mana}/${maxMana}`);
     render();
   };
 
   window.endTurn = () => {
-    if (maxMana < MAX_MANA_LIMIT) {
-      maxMana++;
-      addLog(`🔄 Fin de turno → Máx. maná ${maxMana}`);
-    }
+    if (maxMana < MAX_MANA_LIMIT) maxMana++;
     mana = maxMana;
     board.forEach(s => s.summonedThisTurn = false);
     render();
@@ -119,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     life = 40;
     mana = 3;
     maxMana = 3;
+    activeTerrain = null;
     log.length = 0;
     board.forEach(s => {
       s.card = null;
@@ -127,8 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
       s.modDef = 0;
       s.position = "ATK";
     });
-    activeTerrain = null;
-    addLog("🆕 Nueva partida");
     render();
   };
 
@@ -140,16 +120,12 @@ document.addEventListener("DOMContentLoaded", () => {
     board[i].card = null;
     board[i].modAtk = 0;
     board[i].modDef = 0;
-    board[i].position = "ATK";
-    addLog(`📂 Criatura ${i + 1}: filtro → ${v}`);
     render();
   };
 
-  window.selectCard = (i, id) => {
-    const card = CREATURES.find(c => c.id === id) || null;
-    board[i].card = card;
+  window.selectCreature = (i, id) => {
+    board[i].card = CREATURES.find(c => c.id === id);
     board[i].summonedThisTurn = true;
-    addLog(`🧙 Invoca ${card.name}`);
     render();
   };
 
@@ -175,39 +151,12 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ======================
-  // DROPDOWNS
+  // TERRENO
   // ======================
-  window.toggleElementDropdown = i => {
-    closeAllDropdowns();
-    document.getElementById(`element-options-${i}`).style.display = "block";
+  window.selectTerrain = id => {
+    activeTerrain = TERRAINS.find(t => t.id === id) || null;
+    render();
   };
-
-  window.selectElement = (i, value) => {
-    setFilter(i, value);
-    closeAllDropdowns();
-  };
-
-  window.toggleCreatureDropdown = i => {
-    closeAllDropdowns();
-    document.getElementById(`creature-options-${i}`).style.display = "block";
-  };
-
-  window.selectCreature = (i, id) => {
-    selectCard(i, id);
-    closeAllDropdowns();
-  };
-
-  function closeAllDropdowns() {
-    document.querySelectorAll(".element-options, .creature-options")
-      .forEach(el => el.style.display = "none");
-  }
-
-  document.addEventListener("click", e => {
-    if (!e.target.closest(".element-dropdown") &&
-        !e.target.closest(".creature-dropdown")) {
-      closeAllDropdowns();
-    }
-  });
 
   // ======================
   // RENDER
@@ -232,86 +181,52 @@ document.addEventListener("DOMContentLoaded", () => {
   <div class="slot-title">Criatura ${s.slot}</div>
 
   <div class="element-dropdown">
-    <button class="element-selected" onclick="toggleElementDropdown(${i})">
-      <span class="el-icon">${getElementIcon(s.filter)}</span> ${s.filter}
+    <button class="element-selected">
+      ${getElementIcon(s.filter)} ${s.filter}
     </button>
-    <div class="element-options" id="element-options-${i}">
+    <div class="element-options">
       ${elements.map(e => `
-        <div class="element-option" onclick="selectElement(${i}, '${e}')">
-          <span class="el-icon">${getElementIcon(e)}</span> ${e}
-        </div>`).join("")}
+        <div class="element-option" onclick="setFilter(${i}, '${e}')">
+          ${getElementIcon(e)} ${e}
+        </div>
+      `).join("")}
     </div>
   </div>
 
-<div class="creature-dropdown">
-  <button class="creature-selected" onclick="toggleCreatureDropdown(${i})">
-    ${s.card ? `
-      <span class="el-icon">${getElementIcon(s.card.element)}</span>
-      <span class="creature-name">${s.card.name}</span>
-      <span class="stars">${"⭐".repeat(s.card.stars)}</span>
-    ` : "🧙 Seleccionar criatura"}
-  </button>
-
-  <div class="creature-options" id="creature-options-${i}">
-    ${list.map(c => `
-      <div class="creature-option" onclick="selectCreature(${i}, '${c.id}')">
-        <div class="creature-option-name">${c.name}</div>
-        <div class="creature-option-stars">${"⭐".repeat(c.stars)}</div>
-      </div>
-    `).join("")}
+  <div class="creature-dropdown">
+    <button class="creature-selected">
+      ${s.card
+        ? `${getElementIcon(s.card.element)} ${s.card.name} ${"⭐".repeat(s.card.stars)}`
+        : "🧙 Seleccionar criatura"}
+    </button>
+    <div class="creature-options">
+      ${list.map(c => `
+        <div class="creature-option" onclick="selectCreature(${i}, '${c.id}')">
+          <div>${c.name}</div>
+          <div>${"⭐".repeat(c.stars)}</div>
+        </div>
+      `).join("")}
+    </div>
   </div>
-</div>
 
   ${s.card ? `
-    <div class="stat ${s.card.legendary ? "legendary" : ""}">${s.card.name}</div>
+    <button onclick="togglePosition(${i})">Posición: ${s.position}</button>
 
-    <button onclick="togglePosition(${i})">
-      Posición: ${s.position}
-    </button>
-<div class="stat atk ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
-  ATK:
-  <span class="base-stat">${s.card.atk}</span>
+    <div class="stat atk ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
+      ATK:
+      <span class="base-stat">${s.card.atk}</span>
+      ${auto.atk ? `<span class="auto-bonus">+${auto.atk}</span>` : ""}
+      ${s.modAtk ? `<span class="${s.modAtk > 0 ? "manual-bonus" : "manual-penalty"}">${s.modAtk > 0 ? "+" : ""}${s.modAtk}</span>` : ""}
+      → <strong class="final-stat">${s.card.atk + auto.atk + s.modAtk}</strong>
+    </div>
 
-  ${auto.atk !== 0 ? `
-    <span class="auto-bonus">
-      ${auto.atk > 0 ? "+" : ""}${auto.atk}
-    </span>
-  ` : ""}
-
-  ${s.modAtk !== 0 ? `
-    <span class="${s.modAtk > 0 ? "manual-bonus" : "manual-penalty"}">
-      ${s.modAtk > 0 ? "+" : ""}${s.modAtk}
-    </span>
-  ` : ""}
-
-  → <strong class="final-stat">
-    ${s.card.atk + auto.atk + s.modAtk}
-  </strong>
-</div>
-
-
-<div class="stat def ${s.position === "DEF" ? "active-stat" : "inactive-stat"}">
-  DEF:
-  <span class="base-stat">${s.card.def}</span>
-
-  ${auto.def !== 0 ? `
-    <span class="auto-bonus">
-      ${auto.def > 0 ? "+" : ""}${auto.def}
-    </span>
-  ` : ""}
-
-  ${s.modDef !== 0 ? `
-    <span class="${s.modDef > 0 ? "manual-bonus" : "manual-penalty"}">
-      ${s.modDef > 0 ? "+" : ""}${s.modDef}
-    </span>
-  ` : ""}
-
-  → <strong class="final-stat">
-    ${s.card.def + auto.def + s.modDef}
-  </strong>
-</div>
-
-
+    <div class="stat def ${s.position === "DEF" ? "active-stat" : "inactive-stat"}">
+      DEF:
+      <span class="base-stat">${s.card.def}</span>
+      ${auto.def ? `<span class="auto-bonus">+${auto.def}</span>` : ""}
+      ${s.modDef ? `<span class="${s.modDef > 0 ? "manual-bonus" : "manual-penalty"}">${s.modDef > 0 ? "+" : ""}${s.modDef}</span>` : ""}
+      → <strong class="final-stat">${s.card.def + auto.def + s.modDef}</strong>
+    </div>
 
     <div class="stat">
       <button onclick="modAtk(${i},1)">ATK +</button>
@@ -328,20 +243,21 @@ document.addEventListener("DOMContentLoaded", () => {
 </div>`;
     });
 
+    document.getElementById("terrainSlot").innerHTML = `
+<select onchange="selectTerrain(this.value)">
+  <option value="">— Sin terreno —</option>
+  ${TERRAINS.map(t => `
+    <option value="${t.id}" ${activeTerrain?.id === t.id ? "selected" : ""}>
+      ${t.name}
+    </option>
+  `).join("")}
+</select>
+${activeTerrain ? `<div class="effect-text">${activeTerrain.textEffect}</div>` : ""}
+`;
+
     document.getElementById("log").innerHTML =
       log.map(l => `<div>• ${l}</div>`).join("");
   }
 
   render();
 });
-
-
-
-
-
-
-
-
-
-
-

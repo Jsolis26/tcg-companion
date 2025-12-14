@@ -272,10 +272,41 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class="stat atk ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
       ATK: ${s.card.atk} + ${auto.atk} + ${s.modAtk}
     </div>
+    <div class="stat atk ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
+  ATK:
+  <span class="base-stat">${s.card.atk}</span>
+  ${auto.atk !== 0 ? `
+    + <span class="auto-bonus">${auto.atk}</span>
+  ` : ""}
+  ${s.modAtk !== 0 ? `
+    ${s.modAtk > 0 ? "+" : ""}
+    <span class="${s.modAtk > 0 ? "manual-bonus" : "manual-penalty"}">
+      ${s.modAtk}
+    </span>
+  ` : ""}
+  =
+  <strong>${s.card.atk + auto.atk + s.modAtk}</strong>
+</div>
+
 
     <div class="stat def ${s.position === "DEF" ? "active-stat" : "inactive-stat"}">
       DEF: ${s.card.def} + ${auto.def} + ${s.modDef}
     </div>
+<div class="stat def ${s.position === "DEF" ? "active-stat" : "inactive-stat"}">
+  DEF:
+  <span class="base-stat">${s.card.def}</span>
+  ${auto.def !== 0 ? `
+    + <span class="auto-bonus">${auto.def}</span>
+  ` : ""}
+  ${s.modDef !== 0 ? `
+    ${s.modDef > 0 ? "+" : ""}
+    <span class="${s.modDef > 0 ? "manual-bonus" : "manual-penalty"}">
+      ${s.modDef}
+    </span>
+  ` : ""}
+  =
+  <strong>${s.card.def + auto.def + s.modDef}</strong>
+</div>
 
     <div class="stat">
       <button onclick="modAtk(${i},1)">ATK +</button>
@@ -298,6 +329,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   render();
 });
+
 
 
 

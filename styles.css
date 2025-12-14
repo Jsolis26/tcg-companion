@@ -11,6 +11,19 @@ body {
   padding: 12px;
 }
 
+/* ===== VARIABLES POR ELEMENTO ===== */
+:root {
+  --agua: #203b74;
+  --fuego: #61130f;
+  --planta: #007063;
+  --electricidad: #b6990d;
+  --oscuridad: #5a4785;
+  --luz: #f5d76d;
+  --viento: #a2bfd9;
+  --tierra: #7a4e27;
+  --todos: #999;
+}
+
 /* ===== HEADER ===== */
 .header {
   text-align: center;
@@ -56,23 +69,10 @@ body {
   border-radius: 14px;
   padding: 10px;
   text-align: center;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
-}
-
-.status-block strong {
-  font-size: 1.35em;
 }
 
 .life { color: #ff6b6b; }
 .mana { color: #6f8cff; }
-
-.buttons {
-  margin-top: 8px;
-}
-
-.buttons button {
-  margin: 0 6px;
-}
 
 /* ===== BOTONES ===== */
 button {
@@ -82,45 +82,10 @@ button {
   padding: 6px 12px;
   border-radius: 10px;
   cursor: pointer;
-  font-weight: 500;
-}
-
-button:hover {
-  background: linear-gradient(180deg, #3a3a3a, #232323);
 }
 
 button:active {
   transform: scale(0.95);
-}
-
-/* ===== PARTIDA (BOTONES CENTRADOS) ===== */
-.buttons-row {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-}
-
-/* ===== SELECTS (FILTROS DE JUEGO) ===== */
-select {
-  width: 100%;
-  background: linear-gradient(180deg, #141414, #0b0b0b);
-  border: 1px solid #333;
-  border-radius: 10px;
-  color: #eee;
-  padding: 6px 10px;
-  margin: 4px 0;
-  font-size: 0.9em;
-  cursor: pointer;
-}
-
-select:hover {
-  border-color: #555;
-}
-
-select:focus {
-  outline: none;
-  border-color: #6f8cff;
-  box-shadow: 0 0 0 2px rgba(111,140,255,0.25);
 }
 
 /* ===== TABLERO ===== */
@@ -130,22 +95,13 @@ select:focus {
   gap: 14px;
 }
 
-/* ===== SLOT / CARTA ===== */
+/* ===== SLOT ===== */
 .slot {
   position: relative;
   background: linear-gradient(160deg, #1e1e1e, #0f0f0f);
-  border: 1px solid #333;
+  border: 2px solid #333;
   border-radius: 18px;
   padding: 14px;
-}
-
-.slot::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 18px;
-  box-shadow: inset 0 0 25px rgba(0,0,0,0.7);
-  pointer-events: none;
 }
 
 .slot-title {
@@ -154,294 +110,6 @@ select:focus {
   letter-spacing: 1.5px;
   color: #999;
   margin-bottom: 6px;
-}
-
-/* ===== STATS ===== */
-.stat {
-  margin: 5px 0;
-}
-
-.stat.atk {
-  color: #ff6b6b;
-  font-weight: bold;
-}
-
-.stat.def {
-  color: #6fcf97;
-  font-weight: bold;
-}
-
-.stat strong {
-  font-size: 1.2em;
-}
-
-/* ===== EFECTOS ===== */
-.legendary {
-  color: #ffd700;
-  font-weight: bold;
-}
-
-.effect-text {
-  margin-top: 10px;
-  font-size: 0.9em;
-  background: #000;
-  padding: 8px;
-  border-left: 3px solid #666;
-  border-radius: 6px;
-  white-space: pre-line;
-}
-
-.auto { color: #6fcf97; font-size: 0.85em; }
-.manual { color: #f2c94c; font-size: 0.85em; }
-
-/* ===== TERRENO ===== */
-.terrain-panel {
-  background: radial-gradient(circle at top, #1a1a1a, #0d0d0d);
-  border-color: #3a3a3a;
-}
-
-.terrain-panel .effect-text {
-  border-left-color: #6f8cff;
-}
-
-/* ===== LOG ===== */
-.log {
-  max-height: 200px;
-  overflow-y: auto;
-  background: #0b0b0b;
-  border: 1px solid #222;
-  border-radius: 12px;
-  padding: 8px;
-  font-size: 0.9em;
-}
-
-.log div {
-  margin-bottom: 6px;
-  border-bottom: 1px dashed #222;
-  padding-bottom: 6px;
-}
-
-/* ===== POSICIÓN ATK / DEF ===== */
-.position {
-  font-size: 0.8em;
-  padding: 5px 8px;
-  border-radius: 8px;
-  margin: 6px 0;
-  display: inline-block;
-}
-
-.pos-atk {
-  background: rgba(255, 107, 107, 0.15);
-  border: 1px solid #ff6b6b;
-  color: #ff6b6b;
-}
-
-.pos-def {
-  background: rgba(111, 207, 151, 0.15);
-  border: 1px solid #6fcf97;
-  color: #6fcf97;
-}
-
-.active-stat {
-  background: #1f2933;
-  border-left: 4px solid #22c55e;
-  padding: 6px;
-  border-radius: 6px;
-  font-weight: bold;
-}
-
-.inactive-stat {
-  opacity: 0.45;
-}
-
-/* ===== CRIATURA RECIÉN INVOCADA ===== */
-.summoned {
-  border: 2px dashed #22c55e;
-  box-shadow: 0 0 12px rgba(34,197,94,0.7);
-  animation: pulse 1.4s infinite;
-}
-
-@keyframes pulse {
-  0% { box-shadow: 0 0 6px rgba(34,197,94,0.4); }
-  50% { box-shadow: 0 0 16px rgba(34,197,94,0.9); }
-  100% { box-shadow: 0 0 6px rgba(34,197,94,0.4); }
-}
-
-/* ===== FIX SELECT / OPTION (PC) ===== */
-select {
-  background-color: #0f0f0f;
-  color: #eee;
-}
-
-select option {
-  background-color: #121212;
-  color: #eee;
-}
-
-/* Cuando se pasa el mouse (algunos navegadores) */
-select option:hover {
-  background-color: #1f2933;
-}
-
-/* Opción seleccionada */
-select option:checked {
-  background-color: #2563eb;
-  color: #fff;
-}
-
-/* ===== ELEMENT DROPDOWN (TCG CUSTOM) ===== */
-.element-dropdown {
-  position: relative;
-  margin-bottom: 8px;
-}
-
-.element-selected {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: linear-gradient(180deg, #1a1a1a, #0b0b0b);
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 8px 10px;
-  cursor: pointer;
-}
-
-.element-selected img {
-  width: 18px;
-  height: 18px;
-}
-
-.element-selected span {
-  font-size: 0.85em;
-  letter-spacing: 0.5px;
-}
-
-.element-options {
-  position: absolute;
-  top: 105%;
-  left: 0;
-  right: 0;
-  background: radial-gradient(circle at top, #1e1e1e, #0d0d0d);
-  border: 1px solid #333;
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-  z-index: 50;
-  display: none;
-  animation: dropdownIn 0.18s ease-out;
-}
-
-@keyframes dropdownIn {
-  from { opacity: 0; transform: scale(0.96); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-.element-option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #222;
-}
-
-.element-option:last-child {
-  border-bottom: none;
-}
-
-.element-option:hover {
-  background: #1f2933;
-}
-
-.element-option img {
-  width: 18px;
-  height: 18px;
-}
-
-.element-option span {
-  font-size: 0.8em;
-}
-
-.el-icon {
-  font-size: 1.1em;
-  line-height: 1;
-}
-
-/* ===== CREATURE DROPDOWN ===== */
-.creature-dropdown {
-  position: relative;
-  margin-bottom: 8px;
-}
-
-.creature-selected {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: linear-gradient(180deg, #1a1a1a, #0b0b0b);
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 8px 10px;
-  cursor: pointer;
-}
-
-.creature-placeholder {
-  font-size: 0.8em;
-  color: #888;
-}
-
-.creature-options {
-  position: absolute;
-  top: 105%;
-  left: 0;
-  right: 0;
-  max-height: 260px;
-  overflow-y: auto;
-  background: radial-gradient(circle at top, #1e1e1e, #0d0d0d);
-  border: 1px solid #333;
-  border-radius: 14px;
-  z-index: 60;
-  display: none;
-  box-shadow: 0 12px 35px rgba(0,0,0,0.75);
-}
-
-.creature-option {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #222;
-}
-
-.creature-option:last-child {
-  border-bottom: none;
-}
-
-.creature-option:hover {
-  background: #1f2933;
-}
-
-.creature-name {
-  font-size: 0.8em;
-  flex: 1;
-}
-
-.stars {
-  font-size: 0.75em;
-  white-space: nowrap;
-}
-
-:root {
-  --agua: #203b74;
-  --fuego: #61130f;
-  --planta: #007063;
-  --electricidad: #b6990d;
-  --oscuridad: #5a4785;
-  --luz: #f5d76d;
-  --viento: #a2bfd9;
-  --tierra: #7a4e27;
-  --todos: #999;
 }
 
 /* ===== SLOT POR ELEMENTO ===== */
@@ -458,30 +126,98 @@ select option:checked {
 .slot[class*="element-"]:not(.element-todos) {
   box-shadow:
     inset 0 0 20px rgba(0,0,0,0.6),
-    0 0 12px rgba(255,255,255,0.05);
+    0 0 10px rgba(255,255,255,0.05);
 }
 
+/* ===== DROPDOWN ELEMENTO ===== */
+.element-dropdown,
+.creature-dropdown {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.element-selected,
 .creature-selected {
-  font-weight: 600;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(180deg, #1a1a1a, #0b0b0b);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 8px 10px;
+  cursor: pointer;
 }
 
-.creature-selected .creature-name {
+.element-options,
+.creature-options {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  right: 0;
+  background: radial-gradient(circle at top, #1e1e1e, #0d0d0d);
+  border: 1px solid #333;
+  border-radius: 14px;
+  display: none;
+  z-index: 60;
+}
+
+.element-option,
+.creature-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #222;
+}
+
+.element-option:hover,
+.creature-option:hover {
+  background: #1f2933;
+}
+
+.el-icon {
+  font-size: 1.1em;
+}
+
+.creature-name {
+  flex: 1;
   font-size: 0.85em;
 }
 
-.creature-selected .stars {
-  opacity: 0.9;
+.stars {
+  font-size: 0.75em;
+}
+
+/* ===== STATS ===== */
+.stat {
+  margin: 6px 0;
 }
 
 .active-stat {
   background: rgba(34,197,94,0.15);
+  border-left: 4px solid #22c55e;
+  padding: 6px;
+  border-radius: 6px;
 }
 
 .inactive-stat {
   opacity: 0.35;
 }
 
+/* ===== LEGENDARIAS ===== */
 .legendary {
+  color: #ffd700;
   text-shadow: 0 0 6px rgba(255,215,0,0.6);
 }
 
+/* ===== LOG ===== */
+.log {
+  max-height: 200px;
+  overflow-y: auto;
+  background: #0b0b0b;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 8px;
+}

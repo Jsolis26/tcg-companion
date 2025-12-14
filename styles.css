@@ -221,3 +221,10 @@ button:active {
   border-radius: 12px;
   padding: 8px;
 }
+
+/* ===== BOTONES PARTIDA ===== */
+.buttons-row {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}

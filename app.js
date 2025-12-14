@@ -256,11 +256,15 @@ document.addEventListener("DOMContentLoaded", () => {
     ` : "🧙 Seleccionar criatura"}
   </button>
 
-  <div class="creature-options" id="creature-options-${i}">
-    ${list.map(c => `
-      <div class="creature-option"
-           onclick="selectCreature(${i}, '${c.id}')">
-        <span class="el-icon">${getElementIcon(c.element)}</span>
+<div class="creature-options" id="creature-options-${i}">
+  ${list.map(c => `
+    <div class="creature-option" onclick="selectCreature(${i}, '${c.id}')">
+      <div class="creature-option-name">${c.name}</div>
+      <div class="creature-option-stars">${"⭐".repeat(c.stars)}</div>
+    </div>
+  `).join("")}
+</div>
+
         <div class="creature-text">
           <span class="creature-name">${c.name}</span>
           <span class="stars">${"⭐".repeat(c.stars)}</span>
@@ -307,5 +311,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   render();
 });
+
 
 

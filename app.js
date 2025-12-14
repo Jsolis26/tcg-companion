@@ -262,11 +262,6 @@ document.addEventListener("DOMContentLoaded", () => {
   </div>
 </div>
 
-
-  </div>
-</div>
-
-
   ${s.card ? `
     <div class="stat ${s.card.legendary ? "legendary" : ""}">${s.card.name}</div>
 
@@ -303,6 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   render();
 });
+
 
 
 

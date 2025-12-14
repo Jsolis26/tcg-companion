@@ -47,7 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
       Oscuridad: "🌑",
       Luz: "✨",
       Viento: "🌪️",
-      Tierra: "⛰️"
+      Tierra: "⛰️",
+      Todos: "⭕"
     }[el] || "⭕";
   }
 
@@ -79,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ======================
-     CONTROLES GENERALES
+     CONTROLES
   ====================== */
   window.changeLife = v => {
     life = Math.max(0, life + v);
@@ -127,19 +128,54 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* ======================
-     TABLERO
+     DROPDOWNS – CONTROL GLOBAL
   ====================== */
-  window.setFilter = (i, v) => {
-    board[i].filter = v;
+  function closeAllDropdowns() {
+    document
+      .querySelectorAll(
+        ".element-options, .creature-options, .terrain-options"
+      )
+      .forEach(el => (el.style.display = "none"));
+  }
+
+  document.addEventListener("click", e => {
+    if (!e.target.closest(".element-dropdown")
+      && !e.target.closest(".creature-dropdown")
+      && !e.target.closest(".terrain-dropdown")) {
+      closeAllDropdowns();
+    }
+  });
+
+  /* ======================
+     ELEMENTOS
+  ====================== */
+  window.toggleElementDropdown = i => {
+    closeAllDropdowns();
+    document.getElementById(`element-options-${i}`).style.display = "block";
+  };
+
+  window.selectElement = (i, el) => {
+    board[i].filter = el;
     board[i].card = null;
     board[i].modAtk = 0;
     board[i].modDef = 0;
+    addLog(`📂 Filtro: ${el}`);
+    closeAllDropdowns();
     render();
+  };
+
+  /* ======================
+     CRIATURAS
+  ====================== */
+  window.toggleCreatureDropdown = i => {
+    closeAllDropdowns();
+    document.getElementById(`creature-options-${i}`).style.display = "block";
   };
 
   window.selectCreature = (i, id) => {
     board[i].card = CREATURES.find(c => c.id === id);
     addLog(`🧙 Invoca ${board[i].card.name}`);
+    closeAllDropdowns();
     render();
   };
 
@@ -171,14 +207,14 @@ document.addEventListener("DOMContentLoaded", () => {
      TERRENOS (UX NUEVO)
   ====================== */
   window.toggleTerrainDropdown = () => {
-    const el = document.getElementById("terrain-options");
-    el.style.display = el.style.display === "block" ? "none" : "block";
+    closeAllDropdowns();
+    document.getElementById("terrain-options").style.display = "block";
   };
 
   window.selectTerrain = id => {
-    activeTerrain = TERRAINS.find(t => t.id === id) || null;
-    addLog(`🌍 Terreno activado: ${activeTerrain.name}`);
-    document.getElementById("terrain-options").style.display = "none";
+    activeTerrain = TERRAINS.find(t => t.id === id);
+    addLog(`🌍 Terreno: ${activeTerrain.name}`);
+    closeAllDropdowns();
     render();
   };
 
@@ -193,29 +229,24 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ===== TERRENO ===== */
     const terrainEl = document.getElementById("terrainSlot");
     terrainEl.innerHTML = `
-      <div class="terrain-dropdown">
-        <button class="terrain-selected" onclick="toggleTerrainDropdown()">
-          ${activeTerrain
-            ? `🌍 ${activeTerrain.name}`
-            : "🌍 Seleccionar terreno"}
-        </button>
+<div class="terrain-dropdown">
+  <button class="terrain-selected" onclick="toggleTerrainDropdown()">
+    ${activeTerrain ? `🌍 ${activeTerrain.name}` : "🌍 Seleccionar terreno"}
+  </button>
 
-        <div class="terrain-options" id="terrain-options">
-          ${TERRAINS.map(t => `
-            <div class="terrain-option" onclick="selectTerrain('${t.id}')">
-              <strong>${t.name}</strong>
-              <div class="terrain-text">${t.textEffect}</div>
-            </div>
-          `).join("")}
-        </div>
-
-        ${activeTerrain ? `
-          <div class="terrain-effect">
-            ${activeTerrain.textEffect}
-          </div>
-        ` : ""}
+  <div class="terrain-options" id="terrain-options">
+    ${TERRAINS.map(t => `
+      <div class="terrain-option" onclick="selectTerrain('${t.id}')">
+        <strong>${t.name}</strong>
+        <div class="terrain-text">${t.textEffect}</div>
       </div>
-    `;
+    `).join("")}
+  </div>
+
+  ${activeTerrain ? `
+    <div class="terrain-effect">${activeTerrain.textEffect}</div>
+  ` : ""}
+</div>`;
 
     /* ===== TABLERO ===== */
     const boardEl = document.getElementById("board");
@@ -230,29 +261,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
       boardEl.innerHTML += `
 <div class="slot element-${s.card ? s.card.element.toLowerCase() : "todos"}">
-
   <div class="slot-title">Criatura ${s.slot}</div>
 
   <div class="element-dropdown">
-    <button class="element-selected" onclick="setFilter(${i}, '${s.filter}')">
+    <button class="element-selected" onclick="toggleElementDropdown(${i})">
       ${getElementIcon(s.filter)} ${s.filter}
     </button>
+    <div class="element-options" id="element-options-${i}">
+      ${elements.map(e => `
+        <div class="element-option" onclick="selectElement(${i}, '${e}')">
+          ${getElementIcon(e)} ${e}
+        </div>`).join("")}
+    </div>
   </div>
 
   <div class="creature-dropdown">
-    <button class="creature-selected">
+    <button class="creature-selected" onclick="toggleCreatureDropdown(${i})">
       ${s.card
         ? `${getElementIcon(s.card.element)} ${s.card.name} ${"⭐".repeat(s.card.stars)}`
         : "🧙 Seleccionar criatura"}
     </button>
 
-    <div class="creature-options">
+    <div class="creature-options" id="creature-options-${i}">
       ${list.map(c => `
         <div class="creature-option" onclick="selectCreature(${i}, '${c.id}')">
           <div>${c.name}</div>
           <div>${"⭐".repeat(c.stars)}</div>
-        </div>
-      `).join("")}
+        </div>`).join("")}
     </div>
   </div>
 
@@ -260,19 +295,17 @@ document.addEventListener("DOMContentLoaded", () => {
     <button onclick="togglePosition(${i})">Posición: ${s.position}</button>
 
     <div class="stat ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
-      ATK:
-      <span class="base-stat">${s.card.atk}</span>
+      ATK ${s.card.atk}
       ${auto.atk ? `<span class="auto-bonus">+${auto.atk}</span>` : ""}
       ${s.modAtk ? `<span class="${s.modAtk > 0 ? "manual-bonus" : "manual-penalty"}">${s.modAtk > 0 ? "+" : ""}${s.modAtk}</span>` : ""}
-      → <strong class="final-stat">${s.card.atk + auto.atk + s.modAtk}</strong>
+      → <strong>${s.card.atk + auto.atk + s.modAtk}</strong>
     </div>
 
     <div class="stat ${s.position === "DEF" ? "active-stat" : "inactive-stat"}">
-      DEF:
-      <span class="base-stat">${s.card.def}</span>
+      DEF ${s.card.def}
       ${auto.def ? `<span class="auto-bonus">+${auto.def}</span>` : ""}
       ${s.modDef ? `<span class="${s.modDef > 0 ? "manual-bonus" : "manual-penalty"}">${s.modDef > 0 ? "+" : ""}${s.modDef}</span>` : ""}
-      → <strong class="final-stat">${s.card.def + auto.def + s.modDef}</strong>
+      → <strong>${s.card.def + auto.def + s.modDef}</strong>
     </div>
 
     <div class="stat">
@@ -282,8 +315,6 @@ document.addEventListener("DOMContentLoaded", () => {
       <button onclick="modDef(${i},-1)">DEF −</button>
       <button onclick="clearMods(${i})">Limpiar</button>
     </div>
-
-    ${s.card.textEffect ? `<div class="effect-text">${s.card.textEffect}</div>` : ""}
   ` : ""}
 </div>`;
     });

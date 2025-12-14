@@ -247,3 +247,23 @@ button:active {
   opacity: 0.85;
 }
 
+/* ===== COLORES DE MODIFICADORES ===== */
+.base-stat {
+  color: #eee;
+}
+
+.auto-bonus {
+  color: #4ade80; /* verde (terreno / pasivos) */
+  font-weight: 600;
+}
+
+.manual-bonus {
+  color: #facc15; /* amarillo (manual +) */
+  font-weight: 600;
+}
+
+.manual-penalty {
+  color: #fb7185; /* rojo (manual -) */
+  font-weight: 600;
+}
+

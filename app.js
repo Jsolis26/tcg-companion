@@ -21,13 +21,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const elements = ["Todos", ...new Set(CREATURES.map(c => c.element))];
   const log = [];
 
-  /* ================= LOG ================= */
   function addLog(text) {
     log.unshift(text);
     if (log.length > 50) log.pop();
   }
 
-  /* ================= ICONOS ================= */
   function getElementIcon(el) {
     return {
       Agua: "🌊",
@@ -37,12 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
       Oscuridad: "🌑",
       Luz: "✨",
       Viento: "🌪️",
-      Tierra: "⛰️",
-      Todos: "⭕"
+      Tierra: "⛰️"
     }[el] || "⭕";
   }
 
-  /* ================= BONUS ================= */
   function autoBonus(card) {
     let atk = 0, def = 0;
 
@@ -67,26 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return { atk, def };
   }
 
-  /* ================= DROPDOWNS (CLAVE) ================= */
-  function closeAllDropdowns() {
-    document.querySelectorAll(".dropdown-options")
-      .forEach(d => d.style.display = "none");
-  }
+  /* ========= CONTROLES ========= */
 
-  window.toggleDropdown = id => {
-    const el = document.getElementById(id);
-    const isOpen = el.style.display === "block";
-    closeAllDropdowns();
-    if (!isOpen) el.style.display = "block";
-  };
-
-  document.addEventListener("click", e => {
-    if (!e.target.closest(".dropdown")) {
-      closeAllDropdowns();
-    }
-  });
-
-  /* ================= CONTROLES ================= */
   window.changeLife = v => {
     life = Math.max(0, life + v);
     addLog(`❤️ Vida ${v > 0 ? "+" : ""}${v}`);
@@ -132,29 +110,62 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   };
 
-  /* ================= TABLERO ================= */
-  window.setFilter = (i, v) => {
-    board[i].filter = v;
+  /* ========= DROPDOWNS CRIATURAS ========= */
+
+  function closeCreatureDropdowns() {
+    document
+      .querySelectorAll(".element-options, .creature-options")
+      .forEach(d => d.style.display = "none");
+  }
+
+  document.addEventListener("click", e => {
+    if (!e.target.closest(".element-dropdown") &&
+        !e.target.closest(".creature-dropdown")) {
+      closeCreatureDropdowns();
+    }
+  });
+
+  window.toggleElementDropdown = i => {
+    closeCreatureDropdowns();
+    document.getElementById(`element-options-${i}`).style.display = "block";
+  };
+
+  window.selectElement = (i, el) => {
+    board[i].filter = el;
     board[i].card = null;
     board[i].modAtk = 0;
     board[i].modDef = 0;
-    closeAllDropdowns();
+    closeCreatureDropdowns();
     render();
+  };
+
+  window.toggleCreatureDropdown = i => {
+    closeCreatureDropdowns();
+    document.getElementById(`creature-options-${i}`).style.display = "block";
   };
 
   window.selectCreature = (i, id) => {
     board[i].card = CREATURES.find(c => c.id === id);
     addLog(`🧙 Invoca ${board[i].card.name}`);
-    closeAllDropdowns();
+    closeCreatureDropdowns();
     render();
+  };
+
+  /* ========= TERRENO (AISLADO) ========= */
+
+  window.toggleTerrainDropdown = () => {
+    const el = document.getElementById("terrain-options");
+    el.style.display = el.style.display === "block" ? "none" : "block";
   };
 
   window.selectTerrain = id => {
     activeTerrain = TERRAINS.find(t => t.id === id);
     addLog(`🌍 Terreno: ${activeTerrain.name}`);
-    closeAllDropdowns();
+    document.getElementById("terrain-options").style.display = "none";
     render();
   };
+
+  /* ========= MODS ========= */
 
   window.modAtk = (i, v) => {
     board[i].modAtk += v;
@@ -180,20 +191,21 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   };
 
-  /* ================= RENDER ================= */
+  /* ========= RENDER ========= */
+
   function render() {
     document.getElementById("life").textContent = life;
     document.getElementById("currentMana").textContent = mana;
     document.getElementById("maxMana").textContent = maxMana;
 
-    /* ===== TERRENO ===== */
+    /* TERRENO */
     const terrainEl = document.getElementById("terrainSlot");
     terrainEl.innerHTML = `
-      <div class="dropdown">
-        <button onclick="toggleDropdown('terrain-options')">
+      <div class="terrain-dropdown">
+        <button class="terrain-selected" onclick="toggleTerrainDropdown()">
           ${activeTerrain ? activeTerrain.name : "🌍 Seleccionar terreno"}
         </button>
-        <div id="terrain-options" class="dropdown-options">
+        <div class="terrain-options" id="terrain-options" style="display:none">
           ${TERRAINS.map(t => `
             <div class="terrain-option" onclick="selectTerrain('${t.id}')">
               <strong>${t.name}</strong>
@@ -202,9 +214,10 @@ document.addEventListener("DOMContentLoaded", () => {
           `).join("")}
         </div>
       </div>
+      ${activeTerrain ? `<div class="terrain-effect">${activeTerrain.textEffect}</div>` : ""}
     `;
 
-    /* ===== TABLERO ===== */
+    /* TABLERO */
     const boardEl = document.getElementById("board");
     boardEl.innerHTML = "";
 
@@ -219,28 +232,30 @@ document.addEventListener("DOMContentLoaded", () => {
 <div class="slot element-${s.card ? s.card.element.toLowerCase() : "todos"}">
   <div class="slot-title">Criatura ${s.slot}</div>
 
-  <div class="dropdown">
-    <button onclick="toggleDropdown('element-${i}')">
+  <div class="element-dropdown">
+    <button class="element-selected" onclick="toggleElementDropdown(${i})">
       ${getElementIcon(s.filter)} ${s.filter}
     </button>
-    <div id="element-${i}" class="dropdown-options">
+    <div class="element-options" id="element-options-${i}">
       ${elements.map(e => `
-        <div onclick="setFilter(${i}, '${e}')">
+        <div class="element-option" onclick="selectElement(${i}, '${e}')">
           ${getElementIcon(e)} ${e}
         </div>
       `).join("")}
     </div>
   </div>
 
-  <div class="dropdown">
-    <button onclick="toggleDropdown('creature-${i}')">
-      ${s.card ? `${getElementIcon(s.card.element)} ${s.card.name}` : "🧙 Seleccionar criatura"}
+  <div class="creature-dropdown">
+    <button class="creature-selected" onclick="toggleCreatureDropdown(${i})">
+      ${s.card
+        ? `${getElementIcon(s.card.element)} ${s.card.name} ${"⭐".repeat(s.card.stars)}`
+        : "🧙 Seleccionar criatura"}
     </button>
-    <div id="creature-${i}" class="dropdown-options">
+    <div class="creature-options" id="creature-options-${i}">
       ${list.map(c => `
-        <div onclick="selectCreature(${i}, '${c.id}')">
-          <div>${c.name}</div>
-          <div>${"⭐".repeat(c.stars)}</div>
+        <div class="creature-option" onclick="selectCreature(${i}, '${c.id}')">
+          <div class="creature-option-name">${c.name}</div>
+          <div class="creature-option-stars">${"⭐".repeat(c.stars)}</div>
         </div>
       `).join("")}
     </div>
@@ -249,18 +264,20 @@ document.addEventListener("DOMContentLoaded", () => {
   ${s.card ? `
     <button onclick="togglePosition(${i})">Posición: ${s.position}</button>
 
-    <div class="stat">
-      ATK ${s.card.atk}
+    <div class="stat ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
+      ATK:
+      <span class="base-stat">${s.card.atk}</span>
       ${auto.atk ? `<span class="auto-bonus">+${auto.atk}</span>` : ""}
       ${s.modAtk ? `<span class="${s.modAtk > 0 ? "manual-bonus" : "manual-penalty"}">${s.modAtk > 0 ? "+" : ""}${s.modAtk}</span>` : ""}
-      → <strong>${s.card.atk + auto.atk + s.modAtk}</strong>
+      → <strong class="final-stat">${s.card.atk + auto.atk + s.modAtk}</strong>
     </div>
 
-    <div class="stat">
-      DEF ${s.card.def}
+    <div class="stat ${s.position === "DEF" ? "active-stat" : "inactive-stat"}">
+      DEF:
+      <span class="base-stat">${s.card.def}</span>
       ${auto.def ? `<span class="auto-bonus">+${auto.def}</span>` : ""}
       ${s.modDef ? `<span class="${s.modDef > 0 ? "manual-bonus" : "manual-penalty"}">${s.modDef > 0 ? "+" : ""}${s.modDef}</span>` : ""}
-      → <strong>${s.card.def + auto.def + s.modDef}</strong>
+      → <strong class="final-stat">${s.card.def + auto.def + s.modDef}</strong>
     </div>
 
     <div class="stat">
@@ -270,6 +287,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <button onclick="modDef(${i},-1)">DEF −</button>
       <button onclick="clearMods(${i})">Limpiar</button>
     </div>
+
+    ${s.card.textEffect ? `<div class="effect-text">${s.card.textEffect}</div>` : ""}
   ` : ""}
 </div>`;
     });

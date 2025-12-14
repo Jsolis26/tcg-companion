@@ -3,7 +3,7 @@ import { creatures as CREATURES, terrains as TERRAINS } from "./cards.js";
 document.addEventListener("DOMContentLoaded", () => {
 
   /* ======================
-     CONFIGURACIÓN
+     CONFIG
   ====================== */
   const MAX_MANA_LIMIT = 8;
 
@@ -47,14 +47,13 @@ document.addEventListener("DOMContentLoaded", () => {
       Oscuridad: "🌑",
       Luz: "✨",
       Viento: "🌪️",
-      Tierra: "⛰️",
-      Todos: "⭕"
+      Tierra: "⛰️"
     }[el] || "⭕";
   }
 
   /* ======================
      BONUS AUTOMÁTICOS
-     (Terreno + Pasivos)
+     (Terreno + pasivos)
   ====================== */
   function autoBonus(card) {
     let atk = 0, def = 0;
@@ -170,11 +169,11 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* ======================
-     TERRENOS
+     TERRENO
   ====================== */
   window.selectTerrain = id => {
     activeTerrain = TERRAINS.find(t => t.id === id) || null;
-    addLog(`🌍 Terreno activo: ${activeTerrain.name}`);
+    addLog(`🌍 Terreno activado: ${activeTerrain.name}`);
     render();
   };
 
@@ -189,14 +188,15 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ===== TERRENO ===== */
     const terrainEl = document.getElementById("terrainSlot");
     terrainEl.innerHTML = `
-      <div class="element-dropdown">
-        <button class="element-selected">
-          🌍 ${activeTerrain ? activeTerrain.name : "Sin terreno"}
+      <div class="creature-dropdown">
+        <button class="creature-selected">
+          ${activeTerrain ? `🌍 ${activeTerrain.name}` : "🌍 Seleccionar terreno"}
         </button>
-        <div class="element-options">
+        <div class="creature-options">
           ${TERRAINS.map(t => `
-            <div class="element-option" onclick="selectTerrain('${t.id}')">
-              ${t.name}
+            <div class="creature-option" onclick="selectTerrain('${t.id}')">
+              <div class="creature-option-name">${t.name}</div>
+              <div class="creature-option-stars">${t.textEffect}</div>
             </div>
           `).join("")}
         </div>
@@ -217,21 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       boardEl.innerHTML += `
 <div class="slot element-${s.card ? s.card.element.toLowerCase() : "todos"}">
-
   <div class="slot-title">Criatura ${s.slot}</div>
-
-  <div class="element-dropdown">
-    <button class="element-selected">
-      ${getElementIcon(s.filter)} ${s.filter}
-    </button>
-    <div class="element-options">
-      ${elements.map(e => `
-        <div class="element-option" onclick="setFilter(${i}, '${e}')">
-          ${getElementIcon(e)} ${e}
-        </div>
-      `).join("")}
-    </div>
-  </div>
 
   <div class="creature-dropdown">
     <button class="creature-selected">
@@ -239,7 +225,6 @@ document.addEventListener("DOMContentLoaded", () => {
         ? `${getElementIcon(s.card.element)} ${s.card.name} ${"⭐".repeat(s.card.stars)}`
         : "🧙 Seleccionar criatura"}
     </button>
-
     <div class="creature-options">
       ${list.map(c => `
         <div class="creature-option" onclick="selectCreature(${i}, '${c.id}')">
@@ -250,35 +235,35 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
   </div>
 
-  ${s.card ? `
-    <button onclick="togglePosition(${i})">Posición: ${s.position}</button>
+${s.card ? `
+<button onclick="togglePosition(${i})">Posición: ${s.position}</button>
 
-    <div class="stat ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
-      ATK:
-      <span class="base-stat">${s.card.atk}</span>
-      ${auto.atk ? `<span class="auto-bonus">+${auto.atk}</span>` : ""}
-      ${s.modAtk ? `<span class="${s.modAtk > 0 ? "manual-bonus" : "manual-penalty"}">${s.modAtk > 0 ? "+" : ""}${s.modAtk}</span>` : ""}
-      → <strong class="final-stat">${s.card.atk + auto.atk + s.modAtk}</strong>
-    </div>
+<div class="stat ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
+  ATK:
+  <span class="base-stat">${s.card.atk}</span>
+  ${auto.atk ? `<span class="auto-bonus">+${auto.atk}</span>` : ""}
+  ${s.modAtk ? `<span class="${s.modAtk > 0 ? "manual-bonus" : "manual-penalty"}">${s.modAtk > 0 ? "+" : ""}${s.modAtk}</span>` : ""}
+  → <strong class="final-stat">${s.card.atk + auto.atk + s.modAtk}</strong>
+</div>
 
-    <div class="stat ${s.position === "DEF" ? "active-stat" : "inactive-stat"}">
-      DEF:
-      <span class="base-stat">${s.card.def}</span>
-      ${auto.def ? `<span class="auto-bonus">+${auto.def}</span>` : ""}
-      ${s.modDef ? `<span class="${s.modDef > 0 ? "manual-bonus" : "manual-penalty"}">${s.modDef > 0 ? "+" : ""}${s.modDef}</span>` : ""}
-      → <strong class="final-stat">${s.card.def + auto.def + s.modDef}</strong>
-    </div>
+<div class="stat ${s.position === "DEF" ? "active-stat" : "inactive-stat"}">
+  DEF:
+  <span class="base-stat">${s.card.def}</span>
+  ${auto.def ? `<span class="auto-bonus">+${auto.def}</span>` : ""}
+  ${s.modDef ? `<span class="${s.modDef > 0 ? "manual-bonus" : "manual-penalty"}">${s.modDef > 0 ? "+" : ""}${s.modDef}</span>` : ""}
+  → <strong class="final-stat">${s.card.def + auto.def + s.modDef}</strong>
+</div>
 
-    <div class="stat">
-      <button onclick="modAtk(${i},1)">ATK +</button>
-      <button onclick="modAtk(${i},-1)">ATK −</button>
-      <button onclick="modDef(${i},1)">DEF +</button>
-      <button onclick="modDef(${i},-1)">DEF −</button>
-      <button onclick="clearMods(${i})">Limpiar</button>
-    </div>
+<div class="stat">
+  <button onclick="modAtk(${i},1)">ATK +</button>
+  <button onclick="modAtk(${i},-1)">ATK −</button>
+  <button onclick="modDef(${i},1)">DEF +</button>
+  <button onclick="modDef(${i},-1)">DEF −</button>
+  <button onclick="clearMods(${i})">Limpiar</button>
+</div>
 
-    ${s.card.textEffect ? `<div class="effect-text">${s.card.textEffect}</div>` : ""}
-  ` : ""}
+${s.card.textEffect ? `<div class="effect-text">${s.card.textEffect}</div>` : ""}
+` : ""}
 </div>`;
     });
 

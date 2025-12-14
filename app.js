@@ -3,12 +3,12 @@ import { creatures as CREATURES, terrains as TERRAINS } from "./cards.js";
 document.addEventListener("DOMContentLoaded", () => {
 
   /* ======================
-     CONFIG
+     CONFIGURACIÓN
   ====================== */
   const MAX_MANA_LIMIT = 8;
 
   /* ======================
-     ESTADO
+     ESTADO DE PARTIDA
   ====================== */
   let life = 40;
   let mana = 3;
@@ -47,12 +47,14 @@ document.addEventListener("DOMContentLoaded", () => {
       Oscuridad: "🌑",
       Luz: "✨",
       Viento: "🌪️",
-      Tierra: "⛰️"
+      Tierra: "⛰️",
+      Todos: "⭕"
     }[el] || "⭕";
   }
 
   /* ======================
-     BONUS (Terreno + Legendarias)
+     BONUS AUTOMÁTICOS
+     (Terreno + Pasivos)
   ====================== */
   function autoBonus(card) {
     let atk = 0, def = 0;
@@ -79,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ======================
-     CONTROLES
+     CONTROLES GENERALES
   ====================== */
   window.changeLife = v => {
     life = Math.max(0, life + v);
@@ -172,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ====================== */
   window.selectTerrain = id => {
     activeTerrain = TERRAINS.find(t => t.id === id) || null;
-    addLog(`🌍 Terreno: ${activeTerrain.name}`);
+    addLog(`🌍 Terreno activo: ${activeTerrain.name}`);
     render();
   };
 
@@ -186,9 +188,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* ===== TERRENO ===== */
     const terrainEl = document.getElementById("terrainSlot");
-    terrainEl.innerHTML = activeTerrain
-      ? `<strong>${activeTerrain.name}</strong><div>${activeTerrain.textEffect}</div>`
-      : `<em>Sin terreno activo</em>`;
+    terrainEl.innerHTML = `
+      <div class="element-dropdown">
+        <button class="element-selected">
+          🌍 ${activeTerrain ? activeTerrain.name : "Sin terreno"}
+        </button>
+        <div class="element-options">
+          ${TERRAINS.map(t => `
+            <div class="element-option" onclick="selectTerrain('${t.id}')">
+              ${t.name}
+            </div>
+          `).join("")}
+        </div>
+      </div>
+      ${activeTerrain ? `<div class="effect-text">${activeTerrain.textEffect}</div>` : ""}
+    `;
 
     /* ===== TABLERO ===== */
     const boardEl = document.getElementById("board");
@@ -207,9 +221,16 @@ document.addEventListener("DOMContentLoaded", () => {
   <div class="slot-title">Criatura ${s.slot}</div>
 
   <div class="element-dropdown">
-    <button class="element-selected" onclick="setFilter(${i}, '${s.filter}')">
+    <button class="element-selected">
       ${getElementIcon(s.filter)} ${s.filter}
     </button>
+    <div class="element-options">
+      ${elements.map(e => `
+        <div class="element-option" onclick="setFilter(${i}, '${e}')">
+          ${getElementIcon(e)} ${e}
+        </div>
+      `).join("")}
+    </div>
   </div>
 
   <div class="creature-dropdown">
@@ -222,8 +243,8 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class="creature-options">
       ${list.map(c => `
         <div class="creature-option" onclick="selectCreature(${i}, '${c.id}')">
-          <div>${c.name}</div>
-          <div>${"⭐".repeat(c.stars)}</div>
+          <div class="creature-option-name">${c.name}</div>
+          <div class="creature-option-stars">${"⭐".repeat(c.stars)}</div>
         </div>
       `).join("")}
     </div>
@@ -261,7 +282,6 @@ document.addEventListener("DOMContentLoaded", () => {
 </div>`;
     });
 
-    /* ===== LOG ===== */
     document.getElementById("log").innerHTML =
       log.map(l => `<div>• ${l}</div>`).join("");
   }

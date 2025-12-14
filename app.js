@@ -269,9 +269,17 @@ document.addEventListener("DOMContentLoaded", () => {
       Posición: ${s.position}
     </button>
 
-    <div class="stat atk ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
-      ATK: ${s.card.atk} + ${auto.atk} + ${s.modAtk}
+<div class="stat atk ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
+  ATK: <strong>${s.card.atk + auto.atk + s.modAtk}</strong>
+
+  ${(auto.atk || s.modAtk) ? `
+    <div class="buffs">
+      ${auto.atk ? `<span class="buff terrain">+${auto.atk} Terreno</span>` : ""}
+      ${s.modAtk ? `<span class="buff manual">+${s.modAtk} Manual</span>` : ""}
     </div>
+  ` : ""}
+</div>
+
     <div class="stat atk ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
   ATK:
   <span class="base-stat">${s.card.atk}</span>
@@ -329,6 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   render();
 });
+
 
 
 

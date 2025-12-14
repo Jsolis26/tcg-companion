@@ -266,3 +266,41 @@ button:active {
   color: #fb7185; /* rojo (manual -) */
   font-weight: 600;
 }
+
+/* ===== TERRENO ===== */
+.terrain-selected {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #1a1a1a, #0b0b0b);
+  border: 1px solid #444;
+  cursor: pointer;
+}
+
+.terrain-options {
+  margin-top: 6px;
+  border-radius: 14px;
+}
+
+.terrain-option {
+  padding: 10px;
+  border-bottom: 1px solid #222;
+  cursor: pointer;
+}
+
+.terrain-option:hover {
+  background: #1f2933;
+}
+
+.terrain-text {
+  font-size: 0.75em;
+  opacity: 0.8;
+}
+
+.terrain-effect {
+  margin-top: 10px;
+  padding: 10px;
+  border-left: 4px solid #4ade80;
+  background: rgba(74,222,128,0.1);
+  border-radius: 8px;
+}

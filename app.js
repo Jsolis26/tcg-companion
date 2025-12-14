@@ -265,6 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
   `).join("")}
 </div>
 
+
         <div class="creature-text">
           <span class="creature-name">${c.name}</span>
           <span class="stars">${"⭐".repeat(c.stars)}</span>
@@ -311,6 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   render();
 });
+
 
 
 

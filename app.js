@@ -252,22 +252,17 @@ document.addEventListener("DOMContentLoaded", () => {
     ` : "🧙 Seleccionar criatura"}
   </button>
 
-<div class="creature-options" id="creature-options-${i}">
-  ${list.map(c => `
-    <div class="creature-option" onclick="selectCreature(${i}, '${c.id}')">
-      <div class="creature-option-name">${c.name}</div>
-      <div class="creature-option-stars">${"⭐".repeat(c.stars)}</div>
-    </div>
-  `).join("")}
+  <div class="creature-options" id="creature-options-${i}">
+    ${list.map(c => `
+      <div class="creature-option" onclick="selectCreature(${i}, '${c.id}')">
+        <div class="creature-option-name">${c.name}</div>
+        <div class="creature-option-stars">${"⭐".repeat(c.stars)}</div>
+      </div>
+    `).join("")}
+  </div>
 </div>
 
 
-        <div class="creature-text">
-          <span class="creature-name">${c.name}</span>
-          <span class="stars">${"⭐".repeat(c.stars)}</span>
-        </div>
-      </div>
-    `).join("")}
   </div>
 </div>
 
@@ -308,6 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   render();
 });
+
 
 
 

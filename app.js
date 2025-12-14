@@ -249,7 +249,8 @@ window.togglePosition = i => {
       const auto = s.card ? autoBonus(s.card) : { atk: 0, def: 0 };
 
       boardEl.innerHTML += `
-<div class="slot ${s.summonedThisTurn ? "summoned" : ""}">
+<div class="slot ${s.summonedThisTurn ? "summoned" : ""} element-${s.card ? s.card.element.toLowerCase() : "todos"}">
+
           <div class="slot-title">Criatura ${s.slot}</div>
 
 <div class="element-dropdown" data-slot="${i}">
@@ -432,6 +433,7 @@ document.addEventListener("click", e => {
       .forEach(el => el.style.display = "none");
   }
 });
+
 
 
 

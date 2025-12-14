@@ -432,3 +432,56 @@ select option:checked {
   white-space: nowrap;
 }
 
+:root {
+  --agua: #203b74;
+  --fuego: #61130f;
+  --planta: #007063;
+  --electricidad: #b6990d;
+  --oscuridad: #5a4785;
+  --luz: #f5d76d;
+  --viento: #a2bfd9;
+  --tierra: #7a4e27;
+  --todos: #999;
+}
+
+/* ===== SLOT POR ELEMENTO ===== */
+.slot.element-agua { border-color: var(--agua); }
+.slot.element-fuego { border-color: var(--fuego); }
+.slot.element-planta { border-color: var(--planta); }
+.slot.element-electricidad { border-color: var(--electricidad); }
+.slot.element-oscuridad { border-color: var(--oscuridad); }
+.slot.element-luz { border-color: var(--luz); }
+.slot.element-viento { border-color: var(--viento); }
+.slot.element-tierra { border-color: var(--tierra); }
+.slot.element-todos { border-color: #333; }
+
+.slot[class*="element-"]:not(.element-todos) {
+  box-shadow:
+    inset 0 0 20px rgba(0,0,0,0.6),
+    0 0 12px rgba(255,255,255,0.05);
+}
+
+.creature-selected {
+  font-weight: 600;
+}
+
+.creature-selected .creature-name {
+  font-size: 0.85em;
+}
+
+.creature-selected .stars {
+  opacity: 0.9;
+}
+
+.active-stat {
+  background: rgba(34,197,94,0.15);
+}
+
+.inactive-stat {
+  opacity: 0.35;
+}
+
+.legendary {
+  text-shadow: 0 0 6px rgba(255,215,0,0.6);
+}
+

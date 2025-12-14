@@ -246,13 +246,9 @@ document.addEventListener("DOMContentLoaded", () => {
 <div class="creature-dropdown">
   <button class="creature-selected" onclick="toggleCreatureDropdown(${i})">
     ${s.card ? `
-      <div class="creature-selected-inner">
-        <span class="el-icon">${getElementIcon(s.card.element)}</span>
-        <div class="creature-text">
-          <span class="creature-name">${s.card.name}</span>
-          <span class="stars">${"⭐".repeat(s.card.stars)}</span>
-        </div>
-      </div>
+      <span class="el-icon">${getElementIcon(s.card.element)}</span>
+      <span class="creature-name">${s.card.name}</span>
+      <span class="stars">${"⭐".repeat(s.card.stars)}</span>
     ` : "🧙 Seleccionar criatura"}
   </button>
 
@@ -312,6 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   render();
 });
+
 
 
 

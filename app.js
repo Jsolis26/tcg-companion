@@ -268,28 +268,49 @@ document.addEventListener("DOMContentLoaded", () => {
     <button onclick="togglePosition(${i})">
       Posición: ${s.position}
     </button>
-
 <div class="stat atk ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
-  ATK: <strong>${s.card.atk + auto.atk + s.modAtk}</strong>
+  ATK:
+  <span class="base-stat">${s.card.atk}</span>
 
-  ${(auto.atk || s.modAtk) ? `
-    <div class="buffs">
-      ${auto.atk ? `<span class="buff terrain">+${auto.atk} Terreno</span>` : ""}
-      ${s.modAtk ? `<span class="buff manual">+${s.modAtk} Manual</span>` : ""}
-    </div>
+  ${auto.atk !== 0 ? `
+    <span class="auto-bonus">
+      ${auto.atk > 0 ? "+" : ""}${auto.atk}
+    </span>
   ` : ""}
+
+  ${s.modAtk !== 0 ? `
+    <span class="${s.modAtk > 0 ? "manual-bonus" : "manual-penalty"}">
+      ${s.modAtk > 0 ? "+" : ""}${s.modAtk}
+    </span>
+  ` : ""}
+
+  → <strong class="final-stat">
+    ${s.card.atk + auto.atk + s.modAtk}
+  </strong>
 </div>
+
 
 <div class="stat def ${s.position === "DEF" ? "active-stat" : "inactive-stat"}">
-  DEF: <strong>${s.card.def + auto.def + s.modDef}</strong>
+  DEF:
+  <span class="base-stat">${s.card.def}</span>
 
-  ${(auto.def || s.modDef) ? `
-    <div class="buffs">
-      ${auto.def ? `<span class="buff terrain">+${auto.def} Terreno</span>` : ""}
-      ${s.modDef ? `<span class="buff manual">+${s.modDef} Manual</span>` : ""}
-    </div>
+  ${auto.def !== 0 ? `
+    <span class="auto-bonus">
+      ${auto.def > 0 ? "+" : ""}${auto.def}
+    </span>
   ` : ""}
+
+  ${s.modDef !== 0 ? `
+    <span class="${s.modDef > 0 ? "manual-bonus" : "manual-penalty"}">
+      ${s.modDef > 0 ? "+" : ""}${s.modDef}
+    </span>
+  ` : ""}
+
+  → <strong class="final-stat">
+    ${s.card.def + auto.def + s.modDef}
+  </strong>
 </div>
+
 
 
     <div class="stat">
@@ -313,6 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   render();
 });
+
 
 
 

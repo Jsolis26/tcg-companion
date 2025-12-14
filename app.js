@@ -2,14 +2,10 @@ import { creatures as CREATURES, terrains as TERRAINS } from "./cards.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* ======================
-     CONFIG
-  ====================== */
+  /* ================= CONFIG ================= */
   const MAX_MANA_LIMIT = 8;
 
-  /* ======================
-     ESTADO DE PARTIDA
-  ====================== */
+  /* ================= ESTADO ================= */
   let life = 40;
   let mana = 3;
   let maxMana = 3;
@@ -27,17 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const elements = ["Todos", ...new Set(CREATURES.map(c => c.element))];
   const log = [];
 
-  /* ======================
-     LOG
-  ====================== */
+  /* ================= LOG ================= */
   function addLog(text) {
     log.unshift(text);
     if (log.length > 50) log.pop();
   }
 
-  /* ======================
-     ICONOS
-  ====================== */
+  /* ================= ICONOS ================= */
   function getElementIcon(el) {
     return {
       Agua: "🌊",
@@ -51,10 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }[el] || "⭕";
   }
 
-  /* ======================
-     BONUS AUTOMÁTICOS
-     (Terreno + pasivos)
-  ====================== */
+  /* ================= BONUS ================= */
   function autoBonus(card) {
     let atk = 0, def = 0;
 
@@ -79,9 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return { atk, def };
   }
 
-  /* ======================
-     CONTROLES GENERALES
-  ====================== */
+  /* ================= CONTROLES ================= */
   window.changeLife = v => {
     life = Math.max(0, life + v);
     addLog(`❤️ Vida ${v > 0 ? "+" : ""}${v}`);
@@ -127,23 +114,60 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   };
 
-  /* ======================
-     TABLERO
-  ====================== */
-  window.setFilter = (i, v) => {
-    board[i].filter = v;
+  /* ================= DROPDOWNS ================= */
+  function closeAllDropdowns() {
+    document.querySelectorAll(
+      ".element-options, .creature-options, .terrain-options"
+    ).forEach(d => d.style.display = "none");
+  }
+
+  document.addEventListener("click", e => {
+    if (!e.target.closest(".element-dropdown")
+     && !e.target.closest(".creature-dropdown")
+     && !e.target.closest(".terrain-dropdown")) {
+      closeAllDropdowns();
+    }
+  });
+
+  window.toggleElementDropdown = i => {
+    closeAllDropdowns();
+    document.getElementById(`element-options-${i}`).style.display = "block";
+  };
+
+  window.selectElement = (i, el) => {
+    board[i].filter = el;
     board[i].card = null;
     board[i].modAtk = 0;
     board[i].modDef = 0;
+    closeAllDropdowns();
     render();
+  };
+
+  window.toggleCreatureDropdown = i => {
+    closeAllDropdowns();
+    document.getElementById(`creature-options-${i}`).style.display = "block";
   };
 
   window.selectCreature = (i, id) => {
     board[i].card = CREATURES.find(c => c.id === id);
     addLog(`🧙 Invoca ${board[i].card.name}`);
+    closeAllDropdowns();
     render();
   };
 
+  window.toggleTerrainDropdown = () => {
+    closeAllDropdowns();
+    document.getElementById("terrain-options").style.display = "block";
+  };
+
+  window.selectTerrain = id => {
+    activeTerrain = TERRAINS.find(t => t.id === id);
+    addLog(`🌍 Terreno: ${activeTerrain.name}`);
+    closeAllDropdowns();
+    render();
+  };
+
+  /* ================= MODS ================= */
   window.modAtk = (i, v) => {
     board[i].modAtk += v;
     addLog(`⚔️ ATK ${v > 0 ? "+" : ""}${v}`);
@@ -168,18 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   };
 
-  /* ======================
-     TERRENO
-  ====================== */
-  window.selectTerrain = id => {
-    activeTerrain = TERRAINS.find(t => t.id === id) || null;
-    addLog(`🌍 Terreno activado: ${activeTerrain.name}`);
-    render();
-  };
-
-  /* ======================
-     RENDER
-  ====================== */
+  /* ================= RENDER ================= */
   function render() {
     document.getElementById("life").textContent = life;
     document.getElementById("currentMana").textContent = mana;
@@ -188,21 +201,21 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ===== TERRENO ===== */
     const terrainEl = document.getElementById("terrainSlot");
     terrainEl.innerHTML = `
-      <div class="creature-dropdown">
-        <button class="creature-selected">
-          ${activeTerrain ? `🌍 ${activeTerrain.name}` : "🌍 Seleccionar terreno"}
-        </button>
-        <div class="creature-options">
-          ${TERRAINS.map(t => `
-            <div class="creature-option" onclick="selectTerrain('${t.id}')">
-              <div class="creature-option-name">${t.name}</div>
-              <div class="creature-option-stars">${t.textEffect}</div>
-            </div>
-          `).join("")}
-        </div>
+<div class="terrain-dropdown">
+  <button class="terrain-selected" onclick="toggleTerrainDropdown()">
+    ${activeTerrain ? activeTerrain.name : "🌍 Seleccionar terreno"}
+  </button>
+  <div class="terrain-options" id="terrain-options" style="display:none">
+    ${TERRAINS.map(t => `
+      <div class="terrain-option" onclick="selectTerrain('${t.id}')">
+        <strong>${t.name}</strong>
+        <div class="terrain-text">${t.textEffect}</div>
       </div>
-      ${activeTerrain ? `<div class="effect-text">${activeTerrain.textEffect}</div>` : ""}
-    `;
+    `).join("")}
+  </div>
+</div>
+${activeTerrain ? `<div class="terrain-effect">${activeTerrain.textEffect}</div>` : ""}
+`;
 
     /* ===== TABLERO ===== */
     const boardEl = document.getElementById("board");
@@ -217,15 +230,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
       boardEl.innerHTML += `
 <div class="slot element-${s.card ? s.card.element.toLowerCase() : "todos"}">
+
   <div class="slot-title">Criatura ${s.slot}</div>
 
+  <div class="element-dropdown">
+    <button class="element-selected" onclick="toggleElementDropdown(${i})">
+      ${getElementIcon(s.filter)} ${s.filter}
+    </button>
+    <div class="element-options" id="element-options-${i}">
+      ${elements.map(e => `
+        <div class="element-option" onclick="selectElement(${i}, '${e}')">
+          ${getElementIcon(e)} ${e}
+        </div>
+      `).join("")}
+    </div>
+  </div>
+
   <div class="creature-dropdown">
-    <button class="creature-selected">
+    <button class="creature-selected" onclick="toggleCreatureDropdown(${i})">
       ${s.card
         ? `${getElementIcon(s.card.element)} ${s.card.name} ${"⭐".repeat(s.card.stars)}`
         : "🧙 Seleccionar criatura"}
     </button>
-    <div class="creature-options">
+    <div class="creature-options" id="creature-options-${i}">
       ${list.map(c => `
         <div class="creature-option" onclick="selectCreature(${i}, '${c.id}')">
           <div class="creature-option-name">${c.name}</div>
@@ -235,35 +262,36 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
   </div>
 
-${s.card ? `
-<button onclick="togglePosition(${i})">Posición: ${s.position}</button>
+  ${s.card ? `
+    <button onclick="togglePosition(${i})">Posición: ${s.position}</button>
 
-<div class="stat ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
-  ATK:
-  <span class="base-stat">${s.card.atk}</span>
-  ${auto.atk ? `<span class="auto-bonus">+${auto.atk}</span>` : ""}
-  ${s.modAtk ? `<span class="${s.modAtk > 0 ? "manual-bonus" : "manual-penalty"}">${s.modAtk > 0 ? "+" : ""}${s.modAtk}</span>` : ""}
-  → <strong class="final-stat">${s.card.atk + auto.atk + s.modAtk}</strong>
-</div>
+    <div class="stat ${s.position === "ATK" ? "active-stat" : "inactive-stat"}">
+      ATK:
+      <span class="base-stat">${s.card.atk}</span>
+      ${auto.atk ? `<span class="auto-bonus">+${auto.atk}</span>` : ""}
+      ${s.modAtk ? `<span class="${s.modAtk > 0 ? "manual-bonus" : "manual-penalty"}">${s.modAtk > 0 ? "+" : ""}${s.modAtk}</span>` : ""}
+      → <strong class="final-stat">${s.card.atk + auto.atk + s.modAtk}</strong>
+    </div>
 
-<div class="stat ${s.position === "DEF" ? "active-stat" : "inactive-stat"}">
-  DEF:
-  <span class="base-stat">${s.card.def}</span>
-  ${auto.def ? `<span class="auto-bonus">+${auto.def}</span>` : ""}
-  ${s.modDef ? `<span class="${s.modDef > 0 ? "manual-bonus" : "manual-penalty"}">${s.modDef > 0 ? "+" : ""}${s.modDef}</span>` : ""}
-  → <strong class="final-stat">${s.card.def + auto.def + s.modDef}</strong>
-</div>
+    <div class="stat ${s.position === "DEF" ? "active-stat" : "inactive-stat"}">
+      DEF:
+      <span class="base-stat">${s.card.def}</span>
+      ${auto.def ? `<span class="auto-bonus">+${auto.def}</span>` : ""}
+      ${s.modDef ? `<span class="${s.modDef > 0 ? "manual-bonus" : "manual-penalty"}">${s.modDef > 0 ? "+" : ""}${s.modDef}</span>` : ""}
+      → <strong class="final-stat">${s.card.def + auto.def + s.modDef}</strong>
+    </div>
 
-<div class="stat">
-  <button onclick="modAtk(${i},1)">ATK +</button>
-  <button onclick="modAtk(${i},-1)">ATK −</button>
-  <button onclick="modDef(${i},1)">DEF +</button>
-  <button onclick="modDef(${i},-1)">DEF −</button>
-  <button onclick="clearMods(${i})">Limpiar</button>
-</div>
+    <div class="stat">
+      <button onclick="modAtk(${i},1)">ATK +</button>
+      <button onclick="modAtk(${i},-1)">ATK −</button>
+      <button onclick="modDef(${i},1)">DEF +</button>
+      <button onclick="modDef(${i},-1)">DEF −</button>
+      <button onclick="clearMods(${i})">Limpiar</button>
+    </div>
 
-${s.card.textEffect ? `<div class="effect-text">${s.card.textEffect}</div>` : ""}
-` : ""}
+    ${s.card.textEffect ? `<div class="effect-text">${s.card.textEffect}</div>` : ""}
+  ` : ""}
+
 </div>`;
     });
 

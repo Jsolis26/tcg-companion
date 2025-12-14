@@ -245,27 +245,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <div class="creature-dropdown">
   <button class="creature-selected" onclick="toggleCreatureDropdown(${i})">
-    ${s.card
-      ? `
-        <div class="creature-selected-inner">
-          <span class="el-icon">${getElementIcon(s.card.element)}</span>
+    ${s.card ? `
+      <div class="creature-selected-inner">
+        <span class="el-icon">${getElementIcon(s.card.element)}</span>
+        <div class="creature-text">
           <span class="creature-name">${s.card.name}</span>
           <span class="stars">${"⭐".repeat(s.card.stars)}</span>
         </div>
-      `
-      : "🧙 Seleccionar criatura"}
+      </div>
+    ` : "🧙 Seleccionar criatura"}
   </button>
 
-<div class="creature-option" onclick="selectCreature(${i}, '${c.id}')">
-  <span class="el-icon">${getElementIcon(c.element)}</span>
-  <div class="creature-option-text">
-    <span class="creature-name">${c.name}</span>
-    <span class="stars">${"⭐".repeat(c.stars)}</span>
+  <div class="creature-options" id="creature-options-${i}">
+    ${list.map(c => `
+      <div class="creature-option"
+           onclick="selectCreature(${i}, '${c.id}')">
+        <span class="el-icon">${getElementIcon(c.element)}</span>
+        <div class="creature-text">
+          <span class="creature-name">${c.name}</span>
+          <span class="stars">${"⭐".repeat(c.stars)}</span>
+        </div>
+      </div>
+    `).join("")}
   </div>
 </div>
-        </div>`).join("")}
-    </div>
-  </div>
+
 
   ${s.card ? `
     <div class="stat ${s.card.legendary ? "legendary" : ""}">${s.card.name}</div>
@@ -303,4 +307,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   render();
 });
+
 

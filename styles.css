@@ -230,18 +230,20 @@ button:active {
 }
 
 /* ===== CREATURE SELECTED LAYOUT ===== */
-.creature-selected-inner {
+.creature-option {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 2px;
 }
 
-.creature-option-text {
-  display: flex;
-  flex-direction: column;
+.creature-option-name {
+  font-size: 0.85em;
+  font-weight: 600;
 }
 
-.stars {
-  font-size: 0.75em;
-  opacity: 0.9;
+.creature-option-stars {
+  font-size: 0.7em;
+  opacity: 0.85;
 }
+
